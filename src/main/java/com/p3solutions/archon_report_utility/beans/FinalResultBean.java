@@ -26,5 +26,8 @@ public class FinalResultBean {
     private String schemaName;
     private String jobName;
 
+    private String recordsBeforeRefresh;
+    private String recordsAfterRefresh;
+
 
 }
