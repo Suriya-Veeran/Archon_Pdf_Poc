@@ -1,5 +1,6 @@
 package com.p3solutions.archon_report_utility.reports;
 
+import com.itextpdf.kernel.pdf.PdfArray;
 import com.p3solutions.archon_report_utility.beans.FinalResultBean;
 import com.itextpdf.io.font.PdfEncodings;
 import com.itextpdf.io.image.ImageData;
@@ -19,7 +20,6 @@ import com.itextpdf.kernel.pdf.canvas.draw.SolidLine;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.*;
-import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
 import com.itextpdf.layout.property.VerticalAlignment;
@@ -71,14 +71,14 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
                 .viewActivitySessionId("123456789012345")
                 .reportGeneratedTime("Apr 22 2024 12:14:38 GMT")
                 .jobStatus("Success")
-                .jobType("There was an idea to bring together aaadadgasdgg dsjadvasjdvvd g Abd")
+                .jobType("Materialized View")
                 .scheduledBy("Sysadmin")
-                .scheduledTime("Apr 22 2024 12:12:38 GMT")
-                .startTime("Apr 22 2024 12:12:38 GMT")
-                .endTime("Apr 22 2024 12:14:38 GMT")
+                .scheduledTime("Apr 24 2024 12:12:38 GMT")
+                .startTime("Apr 24 2024 12:12:38 GMT")
+                .endTime("Apr 24 2024 12:14:38 GMT")
                 .totalTime("00:00:08.776")
-                .applicationName("The Bat and The Cat - Schrodinger's Cat ")
-                .schemaName("Either die hero or live long enough to see ")
+                .applicationName("App Name - Check ")
+                .schemaName("Test DBO")
                 .jobName("Materialized View")
                 .recordsBeforeRefresh("0")
                 .recordsAfterRefresh("720")
@@ -147,7 +147,11 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
 
         createJobSummaryTable(inputDoc, finalResultBean, coverPdfDoc);
 
+        addEmptyLines(inputDoc,1);
+
         createObjectiveSummaryTable(inputDoc, MATERIALIZED_VIEW_REFRESH_REPORT);
+
+        addEmptyLines(inputDoc,1);
 
         createAdditionalInputTable(inputDoc, finalResultBean);
 
@@ -187,10 +191,8 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
 
         createLine(inputDoc);
 
-        float[] pointColumnWidths = new float[]{250L, 50L, 250L, 50L};
-        Table headerTable = new Table(UnitValue.createPercentArray(pointColumnWidths));
-        headerTable.setWidth(UnitValue.createPercentValue(100));
-        headerTable.setMarginLeft(-10f);
+        float[] pointColumnWidths = new float[]{2L, 1.5f ,2L , 1.5f , 2L};
+        Table headerTable = createTable(pointColumnWidths);
 
         populateCellForAdditionalInputTable(headerTable, finalResultBean);
 
@@ -223,15 +225,14 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
                         (new Text(MATERIALIZED_VIEW_REFRESH_REPORT.getDescriptionHeader() + MATERIALIZED_VIEW_REFRESH_REPORT.getDescription()))
                         .setTextAlignment(TextAlignment.LEFT)
                         .setFontColor(hexaDecimalToRGB(SMOKY_BLACK_HEXA_DECIMAL))
-                        .setFont(PdfFontFactory.createFont(TIMES_NEW_ROMAN, PdfEncodings.WINANSI))
                         .setFontSize(DESC_FONT_SIZE));
+                break;
+            case "Ingestion Report" :
+                // ingestion
                 break;
             default :
                 break;
         }
-
-
-
 
     }
 
@@ -239,11 +240,7 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
                                    FinalResultBean finalResultBean) throws IOException {
 
         float[] pointColumnWidths = new float[]{2L, 1.5f ,2L , 1.5f , 2L};
-//        Table headerTable = new Table(UnitValue.createPercentArray(pointColumnWidths));
-        Table headerTable = new Table(UnitValue.createPercentArray(pointColumnWidths));
-        headerTable.setWidth(UnitValue.createPercentValue(100));
-        headerTable.setAutoLayout();
-//        headerTable.setMarginLeft(-10f);
+        Table headerTable = createTable(pointColumnWidths);
         headerTable.setMarginTop(-5f);
 
         populateCellForHeaderTable(headerTable,finalResultBean);
@@ -295,18 +292,21 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
 
        }
 
-       cell.setKeepTogether(true);
+        cell.setKeepTogether(true);
         cell.setFontSize(DESC_FONT_SIZE);
         cell.setBackgroundColor(jobStatusNeeded ? backgroundColor : WHITE);
-//        cell.setVerticalAlignment(VerticalAlignment.MIDDLE);
-//        cell.setHorizontalAlignment(HorizontalAlignment.LEFT);
-//        cell.setPaddingLeft(10f);
-//        cell.setPaddingRight(10f);
-//        cell.setHeight(jobStatusNeeded ? STATUS_CELL_HEIGHT_FOR_TABLE : CELL_HEIGHT_FOR_HEADER_TABLE);
         cell.setBorder(Border.NO_BORDER);
 
         headerTable.addCell(cell);
 
+    }
+
+    private Table createTable(float[] pointColumnWidths) {
+        Table applicationSummaryFirstTable = new Table(UnitValue.createPercentArray(pointColumnWidths));
+        applicationSummaryFirstTable.setWidth(UnitValue.createPercentValue(100));
+        applicationSummaryFirstTable.setKeepTogether(true);
+        applicationSummaryFirstTable.setAutoLayout();
+        return applicationSummaryFirstTable;
     }
 
     private void createJobSummaryTable(Document inputDoc,
@@ -319,61 +319,19 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
                 .setFont(PdfFontFactory.createFont(HELVETICA_BOLD, PdfEncodings.WINANSI))
                 .setFontSize(HEADING_FONT_SIZE));
 
-        createHalfLine(coverPdfDoc, GREY_SILVER_HEXA_DECIMAL, 735L, 0);
+        createHalfLine(coverPdfDoc, GREY_SILVER_HEXA_DECIMAL, 740L, 0);
 
         createStatusColumn(inputDoc,finalResultBean);
 
-        addEmptyLines(inputDoc,1);
-
-//        float[] pointColumnWidths = new float[]{2L, 0.8f ,2L , 0.8f , 2L};
         float[] pointColumnWidths = new float[]{3L, 0.5f ,3L , 0.5f , 2L};
-        Table applicationSummaryFirstTable = new Table(UnitValue.createPercentArray(pointColumnWidths));
-        applicationSummaryFirstTable.setWidth(UnitValue.createPercentValue(100));
-        applicationSummaryFirstTable.setKeepTogether(true);
-        applicationSummaryFirstTable.setAutoLayout();
-//        applicationSummaryFirstTable.setMarginLeft(-10f);
 
-        populateCellForJobSummaryTable(applicationSummaryFirstTable,finalResultBean);
+        Table applicationSummaryFirstTable = createTable(pointColumnWidths);
+
+        populateCellForJobSummaryTable(applicationSummaryFirstTable,finalResultBean, inputDoc);
+
+        applicationSummaryFirstTable.setMarginTop(-12f);
 
         inputDoc.add(applicationSummaryFirstTable);
-
-        addEmptyLines(inputDoc, 1);
-
-        pointColumnWidths = new float[]{150L, 10L, 150L, 10L, 150L, 10L};
-
-        Table applicationSummarySecondTable = new Table(UnitValue.createPercentArray(pointColumnWidths));
-        applicationSummarySecondTable.setWidth(UnitValue.createPercentValue(100)).useAllAvailableWidth();
-        applicationSummarySecondTable.setMarginLeft(-10f);
-
-        populateCellForJobSummarySecondTable(applicationSummarySecondTable,finalResultBean);
-
-        inputDoc.add(applicationSummarySecondTable);
-
-        addEmptyLines(inputDoc, 1);
-
-        pointColumnWidths = new float[]{150L, 10L, 150L, 10L, 150L, 10L};
-
-        Table applicationSummaryThirdTable = new Table(UnitValue.createPercentArray(pointColumnWidths));
-        applicationSummaryThirdTable.setWidth(UnitValue.createPercentValue(100)).useAllAvailableWidth();
-        applicationSummaryThirdTable.setMarginLeft(-10f);
-
-        populateCellForJobSummaryThirdTable(applicationSummaryThirdTable,finalResultBean);
-
-        inputDoc.add(applicationSummaryThirdTable);
-
-        addEmptyLines(inputDoc, 1);
-
-    }
-
-    private void populateCellForJobSummaryThirdTable(Table applicationSummaryThirdTable,
-                                                     FinalResultBean finalResultBean) throws IOException {
-
-        cellCreation(applicationSummaryThirdTable,APPLICATION_NAME+finalResultBean.getApplicationName(),TextAlignment.LEFT,true,false,false);
-        cellCreation(applicationSummaryThirdTable,null,TextAlignment.CENTER,false,false,false);
-        cellCreation(applicationSummaryThirdTable,SCHEMA_NAME+finalResultBean.getSchemaName(),TextAlignment.LEFT,true,false,false);
-        cellCreation(applicationSummaryThirdTable,null,TextAlignment.CENTER,false,false,false);
-        cellCreation(applicationSummaryThirdTable,JOB_NAME+finalResultBean.getJobName(),TextAlignment.LEFT,true,false,false);
-        cellCreation(applicationSummaryThirdTable,null,TextAlignment.CENTER,false,false,false);
 
     }
 
@@ -387,34 +345,35 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
         cellCreation(headerTable,VIEW_ACTIVITY_SESSION_ID+finalResultBean.getViewActivitySessionId(),TextAlignment.LEFT,true,false,false);
         cellCreation(headerTable,null,TextAlignment.CENTER,false,false,false);
         cellCreation(headerTable,REPORT_GENERATED_TIME+finalResultBean.getReportGeneratedTime(),TextAlignment.LEFT,true,false,false);
-//        cellCreation(headerTable,null,TextAlignment.CENTER,false,false,false);
 
 
     }
 
 
     private void populateCellForJobSummaryTable(Table applicationSummaryFirstTable,
-                                                FinalResultBean finalResultBean) throws IOException {
+                                                FinalResultBean finalResultBean, Document inputDoc) throws IOException {
 
         cellCreation(applicationSummaryFirstTable,JOB_TYPE+finalResultBean.getJobType(),TextAlignment.LEFT,true,false,false);
         cellCreation(applicationSummaryFirstTable,null,TextAlignment.LEFT,false,false,false);
         cellCreation(applicationSummaryFirstTable,SCHEDULED_BY+finalResultBean.getScheduledBy(),TextAlignment.LEFT,true,false,false);
         cellCreation(applicationSummaryFirstTable,null,TextAlignment.LEFT,false,false,false);
         cellCreation(applicationSummaryFirstTable,REPORT_GENERATED_TIME+finalResultBean.getStartTime(),TextAlignment.LEFT,true,false,false);
-//        cellCreation(applicationSummaryFirstTable,null,TextAlignment.LEFT,false,false,false);
 
-    }
+        addEmptyLines(inputDoc, 1);
 
+        cellCreation(applicationSummaryFirstTable,START_TIME+finalResultBean.getStartTime(),TextAlignment.LEFT,true,false,false);
+        cellCreation(applicationSummaryFirstTable,null,TextAlignment.LEFT,true,false,false);
+        cellCreation(applicationSummaryFirstTable,END_TIME+finalResultBean.getEndTime(),TextAlignment.LEFT,true,false,false);
+        cellCreation(applicationSummaryFirstTable,null,TextAlignment.LEFT,true,false,false);
+        cellCreation(applicationSummaryFirstTable,TOTAL_TIME+finalResultBean.getTotalTime(),TextAlignment.LEFT,true,false,false);
 
-    private void populateCellForJobSummarySecondTable(Table applicationSummarySecondTable,
-                                                      FinalResultBean finalResultBean) throws IOException {
+        addEmptyLines(inputDoc, 1);
 
-        cellCreation(applicationSummarySecondTable,START_TIME+finalResultBean.getStartTime(),TextAlignment.LEFT,true,false,false);
-        cellCreation(applicationSummarySecondTable,null,TextAlignment.LEFT,true,false,false);
-        cellCreation(applicationSummarySecondTable,END_TIME+finalResultBean.getEndTime(),TextAlignment.LEFT,true,false,false);
-        cellCreation(applicationSummarySecondTable,null,TextAlignment.LEFT,true,false,false);
-        cellCreation(applicationSummarySecondTable,TOTAL_TIME+finalResultBean.getTotalTime(),TextAlignment.LEFT,true,false,false);
-        cellCreation(applicationSummarySecondTable,null,TextAlignment.LEFT,true,false,false);
+        cellCreation(applicationSummaryFirstTable,APPLICATION_NAME+finalResultBean.getApplicationName(),TextAlignment.LEFT,true,false,false);
+        cellCreation(applicationSummaryFirstTable,null,TextAlignment.CENTER,false,false,false);
+        cellCreation(applicationSummaryFirstTable,SCHEMA_NAME+finalResultBean.getSchemaName(),TextAlignment.LEFT,true,false,false);
+        cellCreation(applicationSummaryFirstTable,null,TextAlignment.CENTER,false,false,false);
+        cellCreation(applicationSummaryFirstTable,JOB_NAME+finalResultBean.getJobName(),TextAlignment.LEFT,true,false,false);
 
     }
 
@@ -435,16 +394,21 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
                                     FinalResultBean finalResultBean) throws IOException {
         Table table = new Table(1);
         table.setWidth(UnitValue.createPercentValue(100));
+        table.setKeepTogether(true);
+        table.setAutoLayout();
 
         boolean isJobSuccess = finalResultBean.getJobStatus().equalsIgnoreCase(SUCCESS);
 
-
         cellCreation(table,
-                isJobSuccess ? JOB_STATUS+finalResultBean.getJobStatus() : ERROR_MESSAGE_HEADER+ERROR_MESSAGE,
+                 JOB_STATUS+finalResultBean.getJobStatus(),
                 TextAlignment.LEFT,
                 false,
                 true,
                 isJobSuccess);
+
+        if(!isJobSuccess){
+            cellCreation(table, ERROR_MESSAGE_HEADER+ERROR_MESSAGE,TextAlignment.LEFT,false,true,false);
+        }
 
         inputDoc.add(table);
     }
@@ -481,11 +445,13 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
 
         Rectangle rect = new Rectangle(0, 0);
         PdfLinkAnnotation annotation = new PdfLinkAnnotation(rect);
+        annotation.setBorder(new PdfArray(new int[]{0,0,0}));
 
         PdfAction action = PdfAction.createURI(PLATFORM_3_SOLUTIONS_URL);
         annotation.setAction(action);
 
         Link link = new Link(PLATFORM_3_SOLUTIONS, annotation);
+        link.setBorder(Border.NO_BORDER);
 
         Paragraph titleText = new Paragraph()
                 .setFont(font)
@@ -516,7 +482,7 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
                 canvas.closePathStroke();
             }
 
-            float x = 500;
+            float x = 505;
             float y = pageSize.getTop() - 20;
             inputDoc.showTextAligned(logo, x, y, i, TextAlignment.LEFT, VerticalAlignment.MIDDLE, 0);
             inputDoc.showTextAligned(headerText, 30, 820, i, TextAlignment.LEFT, VerticalAlignment.MIDDLE, 0);
