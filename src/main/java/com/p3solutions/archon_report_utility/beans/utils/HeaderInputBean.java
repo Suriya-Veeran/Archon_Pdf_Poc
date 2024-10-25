@@ -14,12 +14,22 @@ import lombok.Setter;
 @Builder
 public class HeaderInputBean {
     private String content;
-    private PdfDocument pdfDocument;
     private TextAlignment textAlignment;
     private float rightMargin;
     private float topMargin;
     private Color backgroundColor;
     private int fontSize;
-    private Document inputDocument;
     private VerticalAlignment verticalAlignment;
+
+
+    // logo
+
+    private boolean isLogoNeeded;
+    private String imagePath;
+    private float fitWidth;
+    private float fitHeight;
+    private float logoWidth;
+    private float logoHeight;
+    private TextAlignment logoTextAlignment;
+    private VerticalAlignment logoVerticalAlignment;
 }

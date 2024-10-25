@@ -8,6 +8,8 @@ public class FontSizeConstants {
 
     public static final int DESC_FONT_SIZE = 8;
 
+    public static final int FOOTER_FONT_SIZE = 9;
+
     public static final int HEADING_FONT_SIZE = 10;
 
     public static final int CELL_HEIGHT_FOR_TABLE = 35;
