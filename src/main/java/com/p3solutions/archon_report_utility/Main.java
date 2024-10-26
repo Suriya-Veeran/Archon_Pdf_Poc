@@ -23,16 +23,22 @@ import static com.p3solutions.archon_report_utility.constants.HeaderConstants.*;
 import static com.p3solutions.archon_report_utility.constants.ImageConstants.ARCHON_LOGO;
 import static com.p3solutions.archon_report_utility.constants.JobSummaryConstants.*;
 import static com.p3solutions.archon_report_utility.constants.ServiceConstants.*;
+import static com.p3solutions.archon_report_utility.constants.report_constants.MaterializedViewConstants.RECORDS_COUNT_AFTER_REFRESH;
+import static com.p3solutions.archon_report_utility.constants.report_constants.MaterializedViewConstants.RECORDS_COUNT_BEFORE_REFRESH;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+
+        float[] pointColumnWidths = new float[]{350L ,350L, 350L};
 
         ExecutableClass executableClass = new ReportUtils("/home/p3/IdeaProjects/Pdf_POC/src/main/resources/pdf_report/report.pdf");
         executableClass.reportProcessInitiated();
 
         executableClass.addEmptyLines(1);
 
-        Table table = executableClass.setTable(buildTableInputBean());
+//        Table table = executableClass.setTable(buildTableInputBean());
+
+        Table table = executableClass.setTable(buildTableInputBean(), pointColumnWidths);
 
         executableClass.setCellTemplateContent(buildColumnInputBean(),table,buildContentForColumn());
 
@@ -46,11 +52,16 @@ public class Main {
 
         executableClass.createHeaderText(JOB_SUMMARY, BLACK_HEXA_DECIMAL, TextAlignment.LEFT, HEADING_FONT_SIZE, HELVETICA_BOLD);
 
-        executableClass.setCellTemplateContent(buildColumnInputBean(),table,buildContentForJobColumn());
+        executableClass.createHalfDivider(buildDividerInputBean(740L, 1, GREY_SILVER_HEXA_DECIMAL));
 
-        executableClass.addTableIntoDocument(table);
+//        Table summaryTable = executableClass.setTable(buildTableInputBean());
+        Table summaryTable =  executableClass.setTable(buildTableInputBean(), pointColumnWidths);
 
-        executableClass.createDivider(buildDividerInputBean(590L, 1, GREY_SILVER_HEXA_DECIMAL));
+        executableClass.setCellTemplateContent(buildColumnInputBean(),summaryTable,buildContentForJobColumn());
+
+        executableClass.addTableIntoDocument(summaryTable);
+
+        executableClass.createHalfDivider(buildDividerInputBean(600L, 1, GREY_SILVER_HEXA_DECIMAL));
 
         executableClass.addEmptyLines(1);
 
@@ -70,18 +81,24 @@ public class Main {
 
         executableClass.addParagraphIntoDocument(objectiveParagraph);
 
-        executableClass.createDivider(buildDividerInputBean(525L, 1, GREY_SILVER_HEXA_DECIMAL));
+        executableClass.createHalfDivider(buildDividerInputBean(540L, 1, GREY_SILVER_HEXA_DECIMAL));
 
         executableClass.addEmptyLines(1);
 
         executableClass.createHeaderText(ADDITIONAL_DETAILS,BLACK_HEXA_DECIMAL,TextAlignment.LEFT, HEADING_FONT_SIZE, HELVETICA_BOLD);
 
+//        Table  additionalTable = executableClass.setTable(buildTableInputBean());
+        Table  additionalTable =  executableClass.setTable(buildTableInputBean(), pointColumnWidths);
+
+        executableClass.setCellTemplateContent(buildColumnInputBean(),additionalTable,buildContentForAdditionalInputColumn());
+
+        executableClass.addTableIntoDocument(additionalTable);
 
         executableClass.addHeader(buildHeaderInputBean());
 
         executableClass.setFooter(buildFooterInputBean());
 
-        executableClass.createDivider(buildDividerInputBean(50L, 1, GREY_SILVER_HEXA_DECIMAL));
+        executableClass.createDivider(buildDividerInputBean(30L, 1, GREY_SILVER_HEXA_DECIMAL));
 
         executableClass.documentClose();
 
@@ -100,7 +117,7 @@ public class Main {
     private static ColumnInputBean buildColumnInputBean() {
        return ColumnInputBean
                 .builder()
-                .border(Border.NO_BORDER)
+//                .border(Border.NO_BORDER)
                 .backgroundColor(WHITE)
                 .fontSize(DESC_FONT_SIZE)
                 .textAlignment(TextAlignment.LEFT)
@@ -163,9 +180,9 @@ public class Main {
                 .font(HELVETICA)
                 .fontColor(hexaDecimalToRGB(PURE_BLACK_HEXA_DECIMAL))
                 .border(Border.NO_BORDER)
-                .textAlignmentHeight(820)
+                .textAlignmentHeight(830)
                 .textAlignmentWidth(560)
-                .pageAlignmentHeight(820)
+                .pageAlignmentHeight(830)
                 .pageAlignmentWidth(100)
                 .build();
     }
@@ -191,5 +208,12 @@ public class Main {
         contentList.add(JOB_NAME+"Materialized View");
         return contentList;
 
+    }
+
+    private static List<String> buildContentForAdditionalInputColumn() {
+        List<String> contentList = new ArrayList<>();
+        contentList.add(RECORDS_COUNT_BEFORE_REFRESH+0);
+        contentList.add(RECORDS_COUNT_AFTER_REFRESH+720);
+        return contentList;
     }
 }

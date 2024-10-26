@@ -33,14 +33,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
-import static com.p3solutions.archon_report_utility.constants.ColorConstants.BLACK_HEXA_DECIMAL;
 import static com.p3solutions.archon_report_utility.constants.ColorConstants.hexaDecimalToRGB;
 import static com.p3solutions.archon_report_utility.constants.CommonConstants.OF;
 import static com.p3solutions.archon_report_utility.constants.CommonConstants.PAGE;
-import static com.p3solutions.archon_report_utility.constants.FontConstants.HELVETICA_BOLD;
-import static com.p3solutions.archon_report_utility.constants.FontSizeConstants.HEADING_FONT_SIZE;
-import static com.p3solutions.archon_report_utility.constants.HeaderConstants.ADDITIONAL_DETAILS;
+
 
 public class ReportUtils implements ExecutableClass {
 
@@ -66,42 +64,62 @@ public class ReportUtils implements ExecutableClass {
     @Override
     public void addHeader(HeaderInputBean headerInputBean) throws IOException {
 
+        if (headerInputBean == null || document == null) {
+            log.warn("HeaderInputBean or document is null. Header addition skipped.");
+            return;
+        }
+
         int numberOfPages =this.document.getPdfDocument().getNumberOfPages();
 
         for (int i = 1; i <= numberOfPages; i++) {
+            addHeaderToPage(headerInputBean, i);
+        }
+    }
 
-            Rectangle pageSize = this.document
-                    .getPdfDocument()
-                    .getPage(i)
-                    .getPageSize();
+    private void addHeaderToPage(HeaderInputBean headerInputBean,
+                                 int pageIndex) {
+        Rectangle pageSize = document.getPdfDocument().getPage(pageIndex).getPageSize();
+        float width = pageSize.getWidth();
+        float height = pageSize.getHeight();
 
-            float width = pageSize.getWidth();
-            float height = pageSize.getHeight();
+        Paragraph paragraph = createParagraph(headerInputBean.getContent(),
+                headerInputBean.getBackgroundColor(),
+                headerInputBean.getTextAlignment(),
+                headerInputBean.getVerticalAlignment(),
+                headerInputBean.getFontSize());
 
-            Paragraph paragraph = createParagraph(headerInputBean.getContent(),
-                    headerInputBean.getBackgroundColor(),
-                    headerInputBean.getTextAlignment(),
-                    headerInputBean.getVerticalAlignment(),
-                    headerInputBean.getFontSize());
+        document
+                .showTextAligned(paragraph,
+                        width - headerInputBean.getRightMargin(),
+                        height - headerInputBean.getTopMargin(),
+                        headerInputBean.getTextAlignment());
 
-            this.document
-                    .showTextAligned(paragraph,
-                            width - headerInputBean.getRightMargin(),
-                            height - headerInputBean.getTopMargin(),
-                            headerInputBean.getTextAlignment());
+        if (headerInputBean.isLogoNeeded()) {
+            Image logoImage = loadImage(headerInputBean.getImagePath(),
+                    headerInputBean.getFitWidth(),
+                    headerInputBean.getFitHeight());
 
-
-            if(headerInputBean.isLogoNeeded()){
-                Image image = readImageDataAndLoadIntoImage(headerInputBean);
-                Paragraph imageParagraph = createParagraph(image);
-                this.document
-                        .showTextAligned(imageParagraph,
+            if (logoImage != null) {
+                document
+                        .showTextAligned(createParagraph(logoImage),
                                 width - headerInputBean.getLogoWidth(),
                                 height - headerInputBean.getLogoHeight(),
                                 headerInputBean.getLogoTextAlignment());
-
             }
+        }
+    }
 
+
+    private Image loadImage(String imagePath,
+                            float fitWidth,
+                            float fitHeight) {
+        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(
+                Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream(imagePath)).readAllBytes())) {
+            ImageData imageData = ImageDataFactory.create(ImageIO.read(inputStream), null);
+           return new Image(imageData).scaleToFit(fitWidth, fitHeight);
+        } catch (IOException e) {
+            log.error("Error loading image from path: {}", imagePath, e);
+            return null;
         }
     }
 
@@ -111,21 +129,59 @@ public class ReportUtils implements ExecutableClass {
         return paragraph.add(image);
     }
 
-    private Image readImageDataAndLoadIntoImage(HeaderInputBean headerInputBean) throws IOException {
-        byte[] data = this.getClass().getClassLoader().getResourceAsStream(headerInputBean.getImagePath()).readAllBytes();
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
-        ImageData imageData = ImageDataFactory.create(ImageIO.read(inputStream), null);
-        Image image = new Image(imageData);
-        image.scaleToFit(headerInputBean.getFitWidth(), headerInputBean.getFitHeight());
-        return image;
-    }
-
 
     @Override
     public void setFooter(FooterInputBean footerInputBean){
-        int numberOfPages = this.document.getPdfDocument().getNumberOfPages();
+
+        if (footerInputBean == null || document == null) {
+            log.warn("FooterInputBean or document is null. Footer addition skipped.");
+            return;
+        }
+
+        int numberOfPages = document.getPdfDocument().getNumberOfPages();
+
+        for (int i = 1; i <= numberOfPages; i++) {
+            addFooterToPage(footerInputBean, i, numberOfPages);
+        }
+
+    }
+
+    private void addFooterToPage(FooterInputBean footerInputBean,
+                                 int pageIndex,
+                                 int totalPages) {
 
         Rectangle rectangle = new Rectangle(footerInputBean.getRectangleWidth(),footerInputBean.getRectangleHeight());
+
+        float width = rectangle.getWidth();
+        float height = rectangle.getHeight();
+
+        Paragraph footerText = createFooterParagraph(footerInputBean, rectangle);
+        document.showTextAligned(footerText,
+                width - footerInputBean.getTextAlignmentWidth(),
+                height - footerInputBean.getTextAlignmentHeight(),
+                pageIndex,
+                footerInputBean.getTextAlignment(),
+                footerInputBean.getVerticalAlignment(),
+                0);
+
+        String pageText = PAGE + pageIndex + OF + totalPages;
+        Paragraph pageNumberParagraph = new Paragraph(pageText)
+                .setFontSize(footerInputBean.getFontSize())
+                .setFontColor(footerInputBean.getFontColor())
+                .setTextAlignment(TextAlignment.LEFT)
+                .setVerticalAlignment(VerticalAlignment.BOTTOM);
+        document.showTextAligned(pageNumberParagraph,
+                width - footerInputBean.getPageAlignmentWidth(),
+                height - footerInputBean.getPageAlignmentHeight(),
+                pageIndex,
+                footerInputBean.getTextAlignment(),
+                footerInputBean.getVerticalAlignment(),
+                0);
+    }
+
+    private Paragraph createFooterParagraph(FooterInputBean footerInputBean,
+                                            Rectangle rectangle) {
+
         PdfLinkAnnotation annotation = new PdfLinkAnnotation(rectangle);
         annotation.setBorder(new PdfArray(new int[]{0,0,0}));
 
@@ -135,76 +191,32 @@ public class ReportUtils implements ExecutableClass {
         Link link = new Link(footerInputBean.getLinkText(), annotation);
         link.setBorder(Border.NO_BORDER);
 
-        Paragraph paragraph = createParagraph(footerInputBean.getWidth(),
-                footerInputBean.getTextAlignment(),
-                footerInputBean.getVerticalAlignment(),
-                footerInputBean.getFontSize(),
-                footerInputBean.getBorder(),
-                footerInputBean.getFontColor(),
-                footerInputBean.getCopyRightText() ,
-                link ,
-                footerInputBean.getAllRightsReservedText());
-
-
-        for(int i = 1; i <= numberOfPages; i++){
-            Rectangle pageSize = this.document
-                    .getPdfDocument()
-                    .getPage(i)
-                    .getPageSize();
-
-            float width = pageSize.getWidth();
-            float height = pageSize.getHeight();
-
-            this.document.showTextAligned(paragraph,
-                    width- footerInputBean.getTextAlignmentWidth(),
-                    height - footerInputBean.getTextAlignmentHeight(),
-                    i,
-                    footerInputBean.getTextAlignment(),
-                    footerInputBean.getVerticalAlignment(),
-                    0);
-
-            String text = PAGE + i + OF + numberOfPages;
-
-            Paragraph pageParagraph = createParagraph(footerInputBean.getWidth(),
-                    TextAlignment.LEFT,
-                    VerticalAlignment.BOTTOM,
-                    footerInputBean.getFontSize(),
-                    footerInputBean.getBorder(),
-                    footerInputBean.getFontColor(),
-                    text);
-
-
-            this.document.showTextAligned(pageParagraph,
-                    width- footerInputBean.getPageAlignmentWidth(),
-                    height - footerInputBean.getPageAlignmentHeight(),
-                    i,
-                    footerInputBean.getTextAlignment(),
-                    footerInputBean.getVerticalAlignment(),
-                    0);
-
-        }
+        return createParagraph(ParagraphInputBean
+                .builder()
+                .width(footerInputBean.getWidth())
+                .verticalAlignment(footerInputBean.getVerticalAlignment())
+                .textAlignment(footerInputBean.getTextAlignment())
+                .border(footerInputBean.getBorder())
+                .fontSize(footerInputBean.getFontSize())
+                .fontColor(footerInputBean.getFontColor())
+                .firstText(footerInputBean.getCopyRightText())
+                .link(link)
+                .endText(footerInputBean.getAllRightsReservedText())
+                .build());
     }
-    
+
     @Override
-    public Paragraph createParagraph(float textWidth,
-                                     TextAlignment textAlignment,
-                                     VerticalAlignment verticalAlignment,
-                                     float fontSize,
-                                     Border border,
-                                     Color fontColor,
-                                     String frontText,
-                                     Link link,
-                                     String endText){
+    public Paragraph createParagraph(ParagraphInputBean paragraph){
         return new Paragraph()
-                .setWidth(UnitValue.createPercentValue(textWidth))
-                .setTextAlignment(textAlignment)
-                .setVerticalAlignment(verticalAlignment)
-                .setFontSize(fontSize)
-                .setBorder(border)
-                .setFontColor(fontColor)
-                .add(frontText)
-                .add(link)
-                .add(endText);
+                .setWidth(UnitValue.createPercentValue(paragraph.getWidth()))
+                .setTextAlignment(paragraph.getTextAlignment())
+                .setVerticalAlignment(paragraph.getVerticalAlignment())
+                .setFontSize(paragraph.getFontSize())
+                .setBorder(paragraph.getBorder())
+                .setFontColor(paragraph.getFontColor())
+                .add(paragraph.getFirstText())
+                .add(paragraph.getLink())
+                .add(paragraph.getEndText());
     }
 
     @Override
@@ -228,7 +240,7 @@ public class ReportUtils implements ExecutableClass {
     @Override
     public void createDivider(DividerInputBean dividerInputBean) {
 
-        PdfPage pdfPage = this.document.getPdfDocument().getPage(dividerInputBean.getPageNumber());
+        PdfPage pdfPage = document.getPdfDocument().getPage(dividerInputBean.getPageNumber());
         PdfCanvas canvas = new PdfCanvas(pdfPage);
         canvas.setStrokeColor(hexaDecimalToRGB(dividerInputBean.getHexaDecimal()));
 
@@ -239,6 +251,19 @@ public class ReportUtils implements ExecutableClass {
         canvas.setLineWidth(dividerInputBean.getLineWidth());
         canvas.closePathStroke();
 
+    }
+
+    @Override
+    public void createHalfDivider(DividerInputBean dividerInputBean) {
+        PdfPage pdfPage = document.getPdfDocument()
+                .getPage(dividerInputBean.getPageNumber());
+        PdfCanvas canvas = new PdfCanvas(pdfPage);
+        canvas.setStrokeColor(hexaDecimalToRGB(dividerInputBean.getHexaDecimal()));
+        canvas.moveTo(35, dividerInputBean.getHeight());
+        canvas.lineTo(pdfPage.getPageSize().getWidth() - 30,
+                dividerInputBean.getHeight());
+        canvas.setLineWidth(dividerInputBean.getLineWidth());
+        canvas.closePathStroke();
     }
 
     @Override
@@ -265,7 +290,7 @@ public class ReportUtils implements ExecutableClass {
         Table table = new Table(tableInputBean.getNumberOfColumns());
         table.setWidth(UnitValue.createPercentValue(tableInputBean.getWidth()));
         table.setKeepTogether(tableInputBean.isKeepTogether());
-        table.setBorder(tableInputBean.getBorder());
+//        table.setBorder(tableInputBean.getBorder());
         return table;
     }
 
@@ -274,7 +299,7 @@ public class ReportUtils implements ExecutableClass {
         Table table = new Table(UnitValue.createPercentArray(pointColumnWidth));
         table.setWidth(UnitValue.createPercentValue(tableInputBean.getWidth()));
         table.setKeepTogether(tableInputBean.isKeepTogether());
-        table.setBorder(tableInputBean.getBorder());
+//        table.setBorder(tableInputBean.getBorder());
         return table;
     }
 
@@ -301,6 +326,7 @@ public class ReportUtils implements ExecutableClass {
     public void setCellTemplateContent(ColumnInputBean columnInputBean,
                         Table table,
                         List<String> contentList) throws IOException {
+
 
         for (String content : contentList) {
             Cell cell = createCell(columnInputBean);

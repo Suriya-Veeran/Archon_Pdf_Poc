@@ -22,8 +22,6 @@ public interface ExecutableClass {
 
     void setFooter(FooterInputBean footerInputBean);
 
-
-
     Table setTable(TableInputBean tableInputBean);
 
     Table setTable(TableInputBean tableInputBean, float[] pointColumnWidth);
@@ -41,15 +39,7 @@ public interface ExecutableClass {
     void addEmptyLines(int numberOfPages);
 
 
-    Paragraph createParagraph(float width,
-                              TextAlignment textAlignment,
-                              VerticalAlignment verticalAlignment,
-                              float fontSize,
-                              Border border,
-                              Color fontColor,
-                              String firstText,
-                              Link link,
-                              String endText);
+    Paragraph createParagraph(ParagraphInputBean paragraphInputBean);
 
      Paragraph createParagraph(Image image);
 
@@ -68,6 +58,8 @@ public interface ExecutableClass {
                               int fontSize);
 
     void createDivider(DividerInputBean dividerInputBean);
+
+    void createHalfDivider(DividerInputBean dividerInputBean);
 
     void createHeaderText(String header,
                           String hexaDecimal,
