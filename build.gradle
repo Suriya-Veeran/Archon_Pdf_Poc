@@ -26,6 +26,8 @@ dependencies {
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-guava:2.1.2'
 
 
+    implementation group: 'com.image-charts', name: 'image-charts', version: '6.0.55'
+
 }
 
 test {

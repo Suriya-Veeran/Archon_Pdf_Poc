@@ -51,7 +51,8 @@ public interface ExecutableClass {
                               Color backgroundColor,
                               TextAlignment textAlignment,
                               VerticalAlignment verticalAlignment,
-                              int fontSize);
+                              int fontSize,
+                              String font) throws IOException;
 
     void createDivider(DividerInputBean dividerInputBean);
 
@@ -64,5 +65,9 @@ public interface ExecutableClass {
                           String font) throws IOException;
 
     void addParagraphIntoDocument(Paragraph paragraph);
+
+    void createJobStatusTable(String header, String value, Table statusTable) throws IOException;
+
+    void createPieChart();
 
 }

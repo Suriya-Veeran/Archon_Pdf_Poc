@@ -1,10 +1,10 @@
 package com.p3solutions.archon_report_utility.utils;
 
 import com.itextpdf.io.font.PdfEncodings;
+import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.colors.Color;
-import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.geom.Rectangle;
@@ -35,9 +35,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-import static com.p3solutions.archon_report_utility.constants.ColorConstants.hexaDecimalToRGB;
+import static com.p3solutions.archon_report_utility.constants.ColorConstants.*;
 import static com.p3solutions.archon_report_utility.constants.CommonConstants.OF;
 import static com.p3solutions.archon_report_utility.constants.CommonConstants.PAGE;
+import static com.p3solutions.archon_report_utility.constants.FontConstants.*;
+import static com.p3solutions.archon_report_utility.constants.JobSummaryConstants.ERROR_MESSAGE_HEADER;
+import static com.p3solutions.archon_report_utility.constants.JobSummaryConstants.SUCCESS;
 
 
 public class ReportUtils implements ExecutableClass {
@@ -61,7 +64,7 @@ public class ReportUtils implements ExecutableClass {
         log.info("Process initiated from Archon ADS");
         File outputFile = new File(outputPath);
         if (!outputFile.exists()) {
-            outputFile.createNewFile();
+            log.info("file creation status : {}", outputFile.createNewFile());
         }
         this.document = createDocument(outputFile.getAbsolutePath(), PageSize.A4);
     }
@@ -86,7 +89,8 @@ public class ReportUtils implements ExecutableClass {
     }
 
     private void addHeaderToPage(HeaderInputBean headerInputBean,
-                                 int pageIndex) {
+                                 int pageIndex) throws IOException {
+
         Rectangle pageSize = document.getPdfDocument().getPage(pageIndex).getPageSize();
         float width = pageSize.getWidth();
         float height = pageSize.getHeight();
@@ -95,11 +99,12 @@ public class ReportUtils implements ExecutableClass {
                 headerInputBean.getBackgroundColor(),
                 headerInputBean.getTextAlignment(),
                 headerInputBean.getVerticalAlignment(),
-                headerInputBean.getFontSize());
+                headerInputBean.getFontSize(),
+                headerInputBean.getFont());
 
         document
                 .showTextAligned(paragraph,
-                        width - headerInputBean.getRightMargin(),
+                        headerInputBean.getLeftMargin(),
                         height - headerInputBean.getTopMargin(),
                         headerInputBean.getTextAlignment());
 
@@ -272,8 +277,8 @@ public class ReportUtils implements ExecutableClass {
                 .getPage(dividerInputBean.getPageNumber());
         PdfCanvas canvas = new PdfCanvas(pdfPage);
         canvas.setStrokeColor(hexaDecimalToRGB(dividerInputBean.getHexaDecimal()));
-        canvas.moveTo(35, dividerInputBean.getHeight());
-        canvas.lineTo(pdfPage.getPageSize().getWidth() - 30,
+        canvas.moveTo(20, dividerInputBean.getHeight());
+        canvas.lineTo(pdfPage.getPageSize().getWidth() - 35,
                 dividerInputBean.getHeight());
         canvas.setLineWidth(dividerInputBean.getLineWidth());
         canvas.closePathStroke();
@@ -290,7 +295,9 @@ public class ReportUtils implements ExecutableClass {
                 .setFontColor(hexaDecimalToRGB(hexaDecimal))
                 .setFont(
                         PdfFontFactory.createFont(font, PdfEncodings.WINANSI))
-                .setFontSize(fontSize));
+                .setFontSize(fontSize)
+                .setPaddingLeft(-17)
+        );
     }
 
     @Override
@@ -300,7 +307,7 @@ public class ReportUtils implements ExecutableClass {
 
     @Override
     public Table setTable(TableInputBean tableInputBean) {
-        Table table = new Table(tableInputBean.getNumberOfColumns());
+        Table table = new Table(1);
         table.setWidth(UnitValue.createPercentValue(tableInputBean.getWidth()));
         table.setKeepTogether(tableInputBean.isKeepTogether());
         table.setBorder(tableInputBean.getBorder());
@@ -359,29 +366,100 @@ public class ReportUtils implements ExecutableClass {
         this.document.add(paragraph);
     }
 
-    private Cell createCell(ColumnInputBean columnInputBean,
-                            String content) throws IOException {
-        Cell cell = new Cell(columnInputBean.getRowSpan(), columnInputBean.getColumnSpan());
-        configureCell(columnInputBean, cell);
-        if (content != null) {
-            cell.add(new Paragraph(content));
+    @Override
+    public void createJobStatusTable(String header,
+                                     String value,
+                                     Table statusTable) throws IOException {
+
+      Color fontColor = value.equalsIgnoreCase(SUCCESS)
+              ? hexaDecimalToRGB(LIGHT_GREEN_HEXA_DECIMAL)
+              : hexaDecimalToRGB(RED_HEXA_DECIMAL);
+
+        boolean status = value.equalsIgnoreCase(SUCCESS);
+
+        Cell cell  = new Cell(1,1);
+        cell.add(new Paragraph(new Text(" "+header+value)));
+
+        cell.setTextAlignment(TextAlignment.LEFT);
+        cell.setFontColor(WHITE);
+        cell.setWidth(100);
+        cell.setFontSize(8);
+        cell.setBorder(Border.NO_BORDER);
+        cell.setHeight(15);
+        cell.setBackgroundColor(fontColor);
+        cell.setFont(PdfFontFactory.createFont(HELVETICA_OBLIQUE));
+
+        if(status){
+            cell.add(new Paragraph(new Text(ERROR_MESSAGE_HEADER+"Error Message")));
         }
-        return cell;
+
+        statusTable.addCell(cell);
     }
 
-    private void configureCell(ColumnInputBean columnInputBean,
-                               Cell cell) throws IOException {
-        cell.setTextAlignment(columnInputBean.getTextAlignment());
+    @Override
+    public void createPieChart() {
+        log.info("pie chart implementation");
+    }
 
-        PdfFont font = PdfFontFactory.createFont(columnInputBean.getFont());
-        cell.setBackgroundColor(columnInputBean.getBackgroundColor());
-        cell.setFontSize(columnInputBean.getFontSize());
-        cell.setFontColor(columnInputBean.getFontColor());
-        cell.setBorder(columnInputBean.getBorder());
-        cell.setFont(font);
-        cell.setVerticalAlignment(VerticalAlignment.MIDDLE);
-        cell.setHorizontalAlignment(HorizontalAlignment.RIGHT);
-        cell.setHeight(columnInputBean.getCellHeight());
+
+    private Cell createCell(ColumnInputBean columnInputBean, String content) throws IOException {
+        Cell cell = new Cell(columnInputBean.getRowSpan(), columnInputBean.getColumnSpan());
+        return configureCell(columnInputBean, cell, content);
+    }
+
+    private Cell configureCell(ColumnInputBean columnInputBean,
+                               Cell cell,
+                               String content) throws IOException {
+
+
+        Cell cellValue = headerColorDetermination(columnInputBean, cell, content);
+        cellValue.setTextAlignment(columnInputBean.getTextAlignment());
+
+        cellValue.setBackgroundColor(columnInputBean.getBackgroundColor());
+        cellValue.setFontSize(columnInputBean.getFontSize());
+        cellValue.setBorder(columnInputBean.getBorder());
+        cellValue.setVerticalAlignment(VerticalAlignment.MIDDLE);
+        cellValue.setHorizontalAlignment(HorizontalAlignment.RIGHT);
+        cellValue.setHeight(columnInputBean.getCellHeight());
+        return cellValue;
+    }
+
+    private Cell headerColorDetermination(ColumnInputBean columnInputBean,
+                                          Cell cell,
+                                          String content) throws IOException {
+
+        Color headerColor = hexaDecimalToRGB(PURE_BLACK_HEXA_DECIMAL);
+        Color valueColor = hexaDecimalToRGB(DARK_GREY_HEXA_DECIMAL);
+
+        if (content != null && !content.trim().isEmpty()) {
+            String[] split = content.split("\\r?\\n");
+            if (columnInputBean.isHeader()) {
+                cell.add(new Paragraph(new Text(split[0]))
+                        .setFont(PdfFontFactory.createFont(HELVETICA_BOLD))
+                        .setFontColor(headerColor)
+                );
+
+                if (split.length > 1) {
+                    cell.add(new Paragraph(new Text("\t" + split[1]))
+                            .setFont(PdfFontFactory.createFont(HELVETICA))
+                            .setFontColor(valueColor)
+                    );
+                }
+            } else {
+                cell.add(new Paragraph(new Text("\t" + split[0])
+                        .setFont(PdfFontFactory.createFont(HELVETICA))
+                        .setFontColor(valueColor)));
+
+                if (split.length > 1) {
+                    cell.add(new Paragraph(new Text(split[1])
+                            .setFont(PdfFontFactory.createFont(HELVETICA_BOLD))
+                            .setFontColor(headerColor)
+                    ));
+                }
+            }
+        }
+
+        return cell;
     }
 
     @Override
@@ -395,9 +473,11 @@ public class ReportUtils implements ExecutableClass {
                                      Color backgroundColor,
                                      TextAlignment textAlignment,
                                      VerticalAlignment verticalAlignment,
-                                     int fontSize) {
+                                     int fontSize,
+                                     String font) throws IOException {
 
         return new Paragraph()
+                .setFont(PdfFontFactory.createFont(font))
                 .setFontColor(backgroundColor)
                 .setFontSize(fontSize)
                 .setTextAlignment(textAlignment)

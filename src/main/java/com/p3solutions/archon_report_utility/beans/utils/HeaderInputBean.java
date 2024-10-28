@@ -20,6 +20,8 @@ public class HeaderInputBean {
     private Color backgroundColor;
     private int fontSize;
     private VerticalAlignment verticalAlignment;
+    private String font;
+    private float leftMargin;
 
 
     // logo

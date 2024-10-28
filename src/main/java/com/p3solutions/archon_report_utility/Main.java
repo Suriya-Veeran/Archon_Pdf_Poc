@@ -10,17 +10,19 @@ import com.p3solutions.archon_report_utility.utils.ReportUtils;
 import java.io.IOException;
 
 import static com.p3solutions.archon_report_utility.constants.ColorConstants.*;
+import static com.p3solutions.archon_report_utility.constants.FontConstants.HELVETICA;
 import static com.p3solutions.archon_report_utility.constants.FontConstants.HELVETICA_BOLD;
-import static com.p3solutions.archon_report_utility.constants.FontSizeConstants.DESC_FONT_SIZE;
 import static com.p3solutions.archon_report_utility.constants.FontSizeConstants.HEADING_FONT_SIZE;
 import static com.p3solutions.archon_report_utility.constants.HeaderConstants.*;
+import static com.p3solutions.archon_report_utility.constants.JobSummaryConstants.JOB_STATUS;
+import static com.p3solutions.archon_report_utility.constants.JobSummaryConstants.SUCCESS;
 import static com.p3solutions.archon_report_utility.utils.BeanUtils.*;
 import static com.p3solutions.archon_report_utility.utils.ContentUtils.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
 
-        float[] pointColumnWidths = new float[]{350L, 350L, 350L};
+        float[] pointColumnWidths = new float[]{450L, 450L, 450L};
 
         ExecutableClass executableClass = new ReportUtils("C:\\Users\\P3INW82\\IdeaProjects\\Archon_Pdf_Poc\\src\\main\\resources\\pdf_report\\Report.pdf");
         executableClass.reportProcessInitiated();
@@ -29,28 +31,41 @@ public class Main {
 
         Table table = executableClass.setTable(buildTableInputBean(), pointColumnWidths);
 
+        table.setMarginLeft(-18);
+
         executableClass.setCellTemplateContent(buildColumnInputBean(), table, buildContentForColumn());
 
         executableClass.addTableIntoDocument(table);
 
         executableClass.addEmptyLines(1);
 
-        executableClass.createDivider(buildDividerInputBean(800L, 1, GREY_SILVER_HEXA_DECIMAL));
+        executableClass.createDivider(buildDividerInputBean(800L, 0.5f, DIVIDER_LINE_HEXA_DECIMAL));
 
-        executableClass.createDivider(buildDividerInputBean(760L, 1, GREY_SILVER_HEXA_DECIMAL));
+        executableClass.createDivider(buildDividerInputBean(760L, 1, ASH_HEXA_DECIMAL));
 
         executableClass.createHeaderText(JOB_SUMMARY, BLACK_HEXA_DECIMAL, TextAlignment.LEFT, HEADING_FONT_SIZE, HELVETICA_BOLD);
 
         executableClass.createHalfDivider(buildDividerInputBean(735L, 1, GREY_SILVER_HEXA_DECIMAL));
 
+        Table statusTable = executableClass.setTable(buildTableInputBean());
+
+        executableClass.createJobStatusTable(JOB_STATUS, SUCCESS, statusTable);
+
+        statusTable.setMarginLeft(-18);
+
+        executableClass.addTableIntoDocument(statusTable);
+
+        executableClass.addEmptyLines(1);
+
         Table summaryTable = executableClass.setTable(buildTableInputBean(), pointColumnWidths);
 
-        executableClass.setCellTemplateContent(buildColumnInputBean(), summaryTable, buildContentForJobColumn());
+        summaryTable.setMarginLeft(-18);
+
+        executableClass.setCellTemplateContent(buildColumnInputBeanForJobSummary(), summaryTable, buildContentForJobColumn());
 
         executableClass.addTableIntoDocument(summaryTable);
 
-
-        executableClass.createHalfDivider(buildDividerInputBean(600L, 1, GREY_SILVER_HEXA_DECIMAL));
+        executableClass.createHalfDivider(buildDividerInputBean(572L, 1, GREY_SILVER_HEXA_DECIMAL));
 
         executableClass.addEmptyLines(1);
 
@@ -66,11 +81,14 @@ public class Main {
                 hexaDecimalToRGB(SMOKY_BLACK_HEXA_DECIMAL),
                 TextAlignment.LEFT,
                 VerticalAlignment.TOP,
-                DESC_FONT_SIZE);
+                8,
+                HELVETICA);
+
+        objectiveParagraph.setMarginLeft(-18);
 
         executableClass.addParagraphIntoDocument(objectiveParagraph);
 
-        executableClass.createHalfDivider(buildDividerInputBean(540L, 1, GREY_SILVER_HEXA_DECIMAL));
+        executableClass.createHalfDivider(buildDividerInputBean(515L, 1, GREY_SILVER_HEXA_DECIMAL));
 
         executableClass.addEmptyLines(1);
 
@@ -78,7 +96,9 @@ public class Main {
 
         Table additionalTable = executableClass.setTable(buildTableInputBean(), pointColumnWidths);
 
-        executableClass.setCellTemplateContent(buildColumnInputBean(), additionalTable, buildContentForAdditionalInputColumn());
+        additionalTable.setMarginLeft(-18);
+
+        executableClass.setCellTemplateContent(buildAdditionalInputBean(), additionalTable, buildContentForAdditionalInputColumn());
 
         executableClass.addTableIntoDocument(additionalTable);
 

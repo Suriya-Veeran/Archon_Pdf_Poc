@@ -47,6 +47,37 @@ public class BeanUtils {
                 .build();
     }
 
+    public static ColumnInputBean buildColumnInputBeanForJobSummary() {
+        return ColumnInputBean
+                .builder()
+                .border(Border.NO_BORDER)
+                .backgroundColor(WHITE)
+                .fontSize(DESC_FONT_SIZE)
+                .textAlignment(TextAlignment.LEFT)
+                .fontColor(hexaDecimalToRGB(PURE_BLACK_HEXA_DECIMAL))
+                .font(HELVETICA_BOLD)
+                .rowSpan(1)
+                .columnSpan(1)
+                .cellHeight(CELL_HEIGHT_FOR_HEADER_TABLE)
+                .isHeader(false)
+                .build();
+    }
+
+    public static ColumnInputBean buildAdditionalInputBean() {
+        return ColumnInputBean
+                .builder()
+                .border(Border.NO_BORDER)
+                .backgroundColor(WHITE)
+                .fontSize(DESC_FONT_SIZE)
+                .textAlignment(TextAlignment.LEFT)
+                .font(HELVETICA_BOLD)
+                .rowSpan(1)
+                .columnSpan(1)
+                .cellHeight(CELL_HEIGHT_FOR_HEADER_TABLE)
+                .isHeader(false)
+                .build();
+    }
+
 
     public static DividerInputBean buildDividerInputBean(float height,
                                                          float lineWidth,
@@ -64,17 +95,19 @@ public class BeanUtils {
         return HeaderInputBean
                 .builder()
                 .content("Materialized View Report")
-                .fontSize(HEADING_FONT_SIZE)
-                .backgroundColor(hexaDecimalToRGB(PURE_BLACK_HEXA_DECIMAL))
+                .fontSize(12)
+                .backgroundColor(hexaDecimalToRGB(BLACK_HEXA_DECIMAL))
+                .font(HELVETICA_BOLD)
                 .textAlignment(TextAlignment.LEFT)
                 .verticalAlignment(VerticalAlignment.TOP)
-                .rightMargin(560)
-                .topMargin(25)
+                .leftMargin(20)
+                .rightMargin(580)
+                .topMargin(30)
                 .isLogoNeeded(true)
                 .imagePath(ARCHON_LOGO)
                 .fitHeight(60)
                 .fitWidth(60)
-                .logoWidth(100)
+                .logoWidth(90)
                 .logoHeight(35)
                 .logoTextAlignment(TextAlignment.LEFT)
                 .logoVerticalAlignment(VerticalAlignment.TOP)
@@ -98,9 +131,9 @@ public class BeanUtils {
                 .fontColor(hexaDecimalToRGB(PURE_BLACK_HEXA_DECIMAL))
                 .border(Border.NO_BORDER)
                 .textAlignmentHeight(15)
-                .textAlignmentWidth(30)
+                .textAlignmentWidth(20)
                 .pageAlignmentHeight(15)
-                .pageAlignmentWidth(500)
+                .pageAlignmentWidth(525)
                 .build();
     }
 
