@@ -40,6 +40,4 @@ public class FooterInputBean {
     private float pageAlignmentHeight;
 
 
-
-
 }

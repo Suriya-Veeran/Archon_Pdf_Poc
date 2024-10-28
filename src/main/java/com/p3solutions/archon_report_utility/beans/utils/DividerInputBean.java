@@ -20,7 +20,4 @@ public class DividerInputBean {
     private float height;
 
 
-
-
-
 }

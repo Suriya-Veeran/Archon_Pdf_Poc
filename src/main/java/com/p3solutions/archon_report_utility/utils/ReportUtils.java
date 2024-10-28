@@ -51,15 +51,24 @@ public class ReportUtils implements ExecutableClass {
         this.outputPath = outputPath;
     }
 
+
+    /**
+     * Initializes the PDF document.
+     */
+
     @Override
     public void reportProcessInitiated() throws IOException {
         log.info("Process initiated from Archon ADS");
         File outputFile = new File(outputPath);
-        if(!outputFile.exists()){
+        if (!outputFile.exists()) {
             outputFile.createNewFile();
         }
         this.document = createDocument(outputFile.getAbsolutePath(), PageSize.A4);
     }
+
+    /**
+     * Adds a header to all pages of the document.
+     */
 
     @Override
     public void addHeader(HeaderInputBean headerInputBean) throws IOException {
@@ -69,7 +78,7 @@ public class ReportUtils implements ExecutableClass {
             return;
         }
 
-        int numberOfPages =this.document.getPdfDocument().getNumberOfPages();
+        int numberOfPages = this.document.getPdfDocument().getNumberOfPages();
 
         for (int i = 1; i <= numberOfPages; i++) {
             addHeaderToPage(headerInputBean, i);
@@ -109,6 +118,9 @@ public class ReportUtils implements ExecutableClass {
         }
     }
 
+    /**
+     * Loads an image for header/footer if required.
+     */
 
     private Image loadImage(String imagePath,
                             float fitWidth,
@@ -116,7 +128,7 @@ public class ReportUtils implements ExecutableClass {
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(
                 Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream(imagePath)).readAllBytes())) {
             ImageData imageData = ImageDataFactory.create(ImageIO.read(inputStream), null);
-           return new Image(imageData).scaleToFit(fitWidth, fitHeight);
+            return new Image(imageData).scaleToFit(fitWidth, fitHeight);
         } catch (IOException e) {
             log.error("Error loading image from path: {}", imagePath, e);
             return null;
@@ -130,8 +142,12 @@ public class ReportUtils implements ExecutableClass {
     }
 
 
+    /**
+     * Adds footer content to all pages.
+     */
+
     @Override
-    public void setFooter(FooterInputBean footerInputBean){
+    public void setFooter(FooterInputBean footerInputBean) {
 
         if (footerInputBean == null || document == null) {
             log.warn("FooterInputBean or document is null. Footer addition skipped.");
@@ -150,15 +166,12 @@ public class ReportUtils implements ExecutableClass {
                                  int pageIndex,
                                  int totalPages) {
 
-        Rectangle rectangle = new Rectangle(footerInputBean.getRectangleWidth(),footerInputBean.getRectangleHeight());
-
-        float width = rectangle.getWidth();
-        float height = rectangle.getHeight();
+        Rectangle rectangle = new Rectangle(footerInputBean.getRectangleWidth(), footerInputBean.getRectangleHeight());
 
         Paragraph footerText = createFooterParagraph(footerInputBean, rectangle);
         document.showTextAligned(footerText,
-                width - footerInputBean.getTextAlignmentWidth(),
-                height - footerInputBean.getTextAlignmentHeight(),
+                footerInputBean.getTextAlignmentWidth(),
+                footerInputBean.getTextAlignmentHeight(),
                 pageIndex,
                 footerInputBean.getTextAlignment(),
                 footerInputBean.getVerticalAlignment(),
@@ -171,8 +184,8 @@ public class ReportUtils implements ExecutableClass {
                 .setTextAlignment(TextAlignment.LEFT)
                 .setVerticalAlignment(VerticalAlignment.BOTTOM);
         document.showTextAligned(pageNumberParagraph,
-                width - footerInputBean.getPageAlignmentWidth(),
-                height - footerInputBean.getPageAlignmentHeight(),
+                footerInputBean.getPageAlignmentWidth(),
+                footerInputBean.getPageAlignmentHeight(),
                 pageIndex,
                 footerInputBean.getTextAlignment(),
                 footerInputBean.getVerticalAlignment(),
@@ -183,7 +196,7 @@ public class ReportUtils implements ExecutableClass {
                                             Rectangle rectangle) {
 
         PdfLinkAnnotation annotation = new PdfLinkAnnotation(rectangle);
-        annotation.setBorder(new PdfArray(new int[]{0,0,0}));
+        annotation.setBorder(new PdfArray(new int[]{0, 0, 0}));
 
         PdfAction action = PdfAction.createURI(footerInputBean.getUrl());
         annotation.setAction(action);
@@ -206,7 +219,7 @@ public class ReportUtils implements ExecutableClass {
     }
 
     @Override
-    public Paragraph createParagraph(ParagraphInputBean paragraph){
+    public Paragraph createParagraph(ParagraphInputBean paragraph) {
         return new Paragraph()
                 .setWidth(UnitValue.createPercentValue(paragraph.getWidth()))
                 .setTextAlignment(paragraph.getTextAlignment())
@@ -226,7 +239,7 @@ public class ReportUtils implements ExecutableClass {
                                      float fontSize,
                                      Border border,
                                      Color fontColor,
-                                     String text){
+                                     String text) {
         return new Paragraph()
                 .setWidth(UnitValue.createPercentValue(textWidth))
                 .setTextAlignment(textAlignment)
@@ -290,7 +303,7 @@ public class ReportUtils implements ExecutableClass {
         Table table = new Table(tableInputBean.getNumberOfColumns());
         table.setWidth(UnitValue.createPercentValue(tableInputBean.getWidth()));
         table.setKeepTogether(tableInputBean.isKeepTogether());
-//        table.setBorder(tableInputBean.getBorder());
+        table.setBorder(tableInputBean.getBorder());
         return table;
     }
 
@@ -299,7 +312,7 @@ public class ReportUtils implements ExecutableClass {
         Table table = new Table(UnitValue.createPercentArray(pointColumnWidth));
         table.setWidth(UnitValue.createPercentValue(tableInputBean.getWidth()));
         table.setKeepTogether(tableInputBean.isKeepTogether());
-//        table.setBorder(tableInputBean.getBorder());
+        table.setBorder(tableInputBean.getBorder());
         return table;
     }
 
@@ -309,7 +322,7 @@ public class ReportUtils implements ExecutableClass {
                         Table table) throws IOException {
 
 
-        Cell cell = new Cell(columnInputBean.getRowSpan(),columnInputBean.getColumnSpan());
+        Cell cell = new Cell(columnInputBean.getRowSpan(), columnInputBean.getColumnSpan());
 
         cell.setTextAlignment(columnInputBean.getTextAlignment());
         cell.setBackgroundColor(columnInputBean.getBackgroundColor());
@@ -324,13 +337,12 @@ public class ReportUtils implements ExecutableClass {
 
     @Override
     public void setCellTemplateContent(ColumnInputBean columnInputBean,
-                        Table table,
-                        List<String> contentList) throws IOException {
+                                       Table table,
+                                       List<String> contentList) throws IOException {
 
 
         for (String content : contentList) {
-            Cell cell = createCell(columnInputBean);
-            cell.add(new Paragraph(content));
+            Cell cell = createCell(columnInputBean, content);
             table.addCell(cell);
         }
     }
@@ -343,12 +355,22 @@ public class ReportUtils implements ExecutableClass {
     }
 
     @Override
-    public void addParagraphIntoDocument(Paragraph paragraph){
+    public void addParagraphIntoDocument(Paragraph paragraph) {
         this.document.add(paragraph);
     }
 
-    private Cell createCell(ColumnInputBean columnInputBean) throws IOException {
+    private Cell createCell(ColumnInputBean columnInputBean,
+                            String content) throws IOException {
         Cell cell = new Cell(columnInputBean.getRowSpan(), columnInputBean.getColumnSpan());
+        configureCell(columnInputBean, cell);
+        if (content != null) {
+            cell.add(new Paragraph(content));
+        }
+        return cell;
+    }
+
+    private void configureCell(ColumnInputBean columnInputBean,
+                               Cell cell) throws IOException {
         cell.setTextAlignment(columnInputBean.getTextAlignment());
 
         PdfFont font = PdfFontFactory.createFont(columnInputBean.getFont());
@@ -360,7 +382,6 @@ public class ReportUtils implements ExecutableClass {
         cell.setVerticalAlignment(VerticalAlignment.MIDDLE);
         cell.setHorizontalAlignment(HorizontalAlignment.RIGHT);
         cell.setHeight(columnInputBean.getCellHeight());
-        return cell;
     }
 
     @Override
@@ -405,9 +426,8 @@ public class ReportUtils implements ExecutableClass {
     }
 
 
-
     public String setReportName(String title,
-                                      String extension) {
+                                String extension) {
         return title + "." + extension;
     }
 
@@ -438,15 +458,15 @@ public class ReportUtils implements ExecutableClass {
         return new Table(1);
     }
 
-    public Table createTable(Document document, String content){
+    public Table createTable(Document document, String content) {
         Table table = new Table(1);
-        createCell(table,content);
+        createCell(table, content);
         document.add(table);
         return table;
     }
 
     public void createCell(Table table, String content) {
-        Cell cell = new Cell(1,1);
+        Cell cell = new Cell(1, 1);
         cell.add(new Paragraph(content));
         table.addCell(cell);
     }

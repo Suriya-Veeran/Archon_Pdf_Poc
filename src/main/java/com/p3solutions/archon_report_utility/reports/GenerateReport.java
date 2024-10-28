@@ -45,26 +45,26 @@ import static com.p3solutions.archon_report_utility.constants.ReportNameConstant
 @Slf4j
 public class GenerateReport {
 
-    public static final  String REPORT_PDF = "/home/p3/IdeaProjects/Pdf_POC/src/main/resources/pdf_report/Materialized_View_Report.pdf";
+    public static final String REPORT_PDF = "/home/p3/IdeaProjects/Pdf_POC/src/main/resources/pdf_report/Materialized_View_Report.pdf";
 
 
     private static final String ERROR_MESSAGE =
             """
-            com.p3solutions.mobius.core.afp_parser.core.afp.exceptions.AFPParserException: An exception occured when parsing structured field at file index position 0x353cd.
-at com.p3solutions.mobius.core.afp_parser.core.afp.parser.AFPParser.parseNextSF(AFPParser.java:304)
-at com.p3solutions.mobius.core.afp_parser.core.AFPTagsV6.parseAfpContentIntoIndexFile(AFPTagsV6.java:211)
-at com.p3solutions.mobius.core.services.extraction.ExtractionHelper.updateIndexColumnIntoWriterBean(ExtractionHelper.java:600)
-at com.p3solutions.mobius.core.services.extraction.ExtractionHelper.buildAttachmentFileCreationIntoBlobFolderAFP(ExtractionHelper.java:548)
-at com.p3solutions.mobius.core.services.extraction.ExtractionCore.mobiusSetExecutionStarts(ExtractionCore.java:1031)
-at com.p3solutions.mobius.core.services.extraction.ExtractionCore.startExtractionForMobius(ExtractionCore.java:316)
-at com.p3solutions.mobius.core.services.extraction.ExtractionCore.startArchivalReportForMobius(ExtractionCore.java:202)
-at com.p3solutions.mobius.core.services.extraction.ExtractionCore.process(ExtractionCore.java:120)
-at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.process(CustomForkJoinRecursiveTask.java:46)
-at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.compute(CustomForkJoinRecursiveTask.java:55)
-            """;
+                                com.p3solutions.mobius.core.afp_parser.core.afp.exceptions.AFPParserException: An exception occured when parsing structured field at file index position 0x353cd.
+                    at com.p3solutions.mobius.core.afp_parser.core.afp.parser.AFPParser.parseNextSF(AFPParser.java:304)
+                    at com.p3solutions.mobius.core.afp_parser.core.AFPTagsV6.parseAfpContentIntoIndexFile(AFPTagsV6.java:211)
+                    at com.p3solutions.mobius.core.services.extraction.ExtractionHelper.updateIndexColumnIntoWriterBean(ExtractionHelper.java:600)
+                    at com.p3solutions.mobius.core.services.extraction.ExtractionHelper.buildAttachmentFileCreationIntoBlobFolderAFP(ExtractionHelper.java:548)
+                    at com.p3solutions.mobius.core.services.extraction.ExtractionCore.mobiusSetExecutionStarts(ExtractionCore.java:1031)
+                    at com.p3solutions.mobius.core.services.extraction.ExtractionCore.startExtractionForMobius(ExtractionCore.java:316)
+                    at com.p3solutions.mobius.core.services.extraction.ExtractionCore.startArchivalReportForMobius(ExtractionCore.java:202)
+                    at com.p3solutions.mobius.core.services.extraction.ExtractionCore.process(ExtractionCore.java:120)
+                    at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.process(CustomForkJoinRecursiveTask.java:46)
+                    at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.compute(CustomForkJoinRecursiveTask.java:55)
+                                """;
 
 
-    private FinalResultBean buildFinalResultBean(){
+    private FinalResultBean buildFinalResultBean() {
 
         return FinalResultBean.builder()
                 .generatedBy("SysAdmin")
@@ -98,9 +98,9 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
 
             inputDoc.setMargins(35, 30, 30, 30);
 
-            addEmptyLines(inputDoc,2);
+            addEmptyLines(inputDoc, 2);
 
-            reportProcess("MATERIALIZED",finalResultBean,inputDoc,coverPdfDoc);
+            reportProcess("MATERIALIZED", finalResultBean, inputDoc, coverPdfDoc);
 
             documentClose(inputDoc);
             documentPdfClose(coverPdfDoc);
@@ -122,9 +122,9 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
                                Document inputDoc,
                                PdfDocument coverPdfDoc) throws IOException {
 
-        switch (type){
+        switch (type) {
             case "MATERIALIZED":
-                generateMaterializedReport(finalResultBean,inputDoc,coverPdfDoc);
+                generateMaterializedReport(finalResultBean, inputDoc, coverPdfDoc);
                 break;
             case "INGESTION":
                 // TODO : INGESTION
@@ -139,25 +139,25 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
                                             Document inputDoc,
                                             PdfDocument coverPdfDoc) throws IOException {
 
-        createFullLine(coverPdfDoc,DIVIDER_LINE_HEXA_DECIMAL,800L,0);
+        createFullLine(coverPdfDoc, DIVIDER_LINE_HEXA_DECIMAL, 800L, 0);
 
-        createHeaderTable(inputDoc,finalResultBean);
+        createHeaderTable(inputDoc, finalResultBean);
 
-        createFullLine(coverPdfDoc,ASH_HEXA_DECIMAL,760L,2);
+        createFullLine(coverPdfDoc, ASH_HEXA_DECIMAL, 760L, 2);
 
         createJobSummaryTable(inputDoc, finalResultBean, coverPdfDoc);
 
-        addEmptyLines(inputDoc,1);
+        addEmptyLines(inputDoc, 1);
 
         createObjectiveSummaryTable(inputDoc, MATERIALIZED_VIEW_REFRESH_REPORT);
 
-        addEmptyLines(inputDoc,1);
+        addEmptyLines(inputDoc, 1);
 
         createAdditionalInputTable(inputDoc, finalResultBean);
 
-        populateHeaderAndFooter(coverPdfDoc, inputDoc,MATERIALIZED_VIEW_REFRESH_REPORT.getReportName());
+        populateHeaderAndFooter(coverPdfDoc, inputDoc, MATERIALIZED_VIEW_REFRESH_REPORT.getReportName());
 
-        createFullLine(coverPdfDoc,FOOTER_HEXA_DECIMAL,25L,1);
+        createFullLine(coverPdfDoc, FOOTER_HEXA_DECIMAL, 25L, 1);
     }
 
     private void createFullLine(PdfDocument coverPdfDoc,
@@ -167,7 +167,7 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
         PdfPage pdfPage = coverPdfDoc.getPage(1);
         PdfCanvas canvas = new PdfCanvas(pdfPage);
         canvas.setStrokeColor(hexaDecimalToRGB(hexaDecimal));
-        canvasWrite(canvas,pdfPage.getPageSize().getWidth(),height,0);
+        canvasWrite(canvas, pdfPage.getPageSize().getWidth(), height, 0);
         canvas.setLineWidth(lineWidth);
         canvas.closePathStroke();
     }
@@ -184,14 +184,14 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
                                             FinalResultBean finalResultBean) throws IOException {
 
         inputDoc.add(new Paragraph(new Text(ADDITIONAL_DETAILS)).setTextAlignment(TextAlignment.LEFT)
-                        .setFontColor(hexaDecimalToRGB(BLACK_HEXA_DECIMAL))
+                .setFontColor(hexaDecimalToRGB(BLACK_HEXA_DECIMAL))
                 .setFont(
                         PdfFontFactory.createFont(HELVETICA_BOLD, PdfEncodings.WINANSI))
                 .setFontSize(HEADING_FONT_SIZE));
 
         createLine(inputDoc);
 
-        float[] pointColumnWidths = new float[]{2L, 1.5f ,2L , 1.5f , 2L};
+        float[] pointColumnWidths = new float[]{2L, 1.5f, 2L, 1.5f, 2L};
         Table headerTable = createTable(pointColumnWidths);
 
         populateCellForAdditionalInputTable(headerTable, finalResultBean);
@@ -203,34 +203,34 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
     private void populateCellForAdditionalInputTable(Table headerTable,
                                                      FinalResultBean finalResultBean) throws IOException {
 
-        cellCreation(headerTable,RECORDS_COUNT_BEFORE_REFRESH+finalResultBean.getRecordsBeforeRefresh(),TextAlignment.LEFT,false,false,false);
-        cellCreation(headerTable,null,TextAlignment.LEFT,false,false, false);
-        cellCreation(headerTable,RECORDS_COUNT_AFTER_REFRESH+finalResultBean.getRecordsAfterRefresh(),TextAlignment.LEFT,false,false, false);
-        cellCreation(headerTable,null,TextAlignment.LEFT,false,false,false);
+        cellCreation(headerTable, RECORDS_COUNT_BEFORE_REFRESH + finalResultBean.getRecordsBeforeRefresh(), TextAlignment.LEFT, false, false, false);
+        cellCreation(headerTable, null, TextAlignment.LEFT, false, false, false);
+        cellCreation(headerTable, RECORDS_COUNT_AFTER_REFRESH + finalResultBean.getRecordsAfterRefresh(), TextAlignment.LEFT, false, false, false);
+        cellCreation(headerTable, null, TextAlignment.LEFT, false, false, false);
 
     }
 
     private void createObjectiveSummaryTable(Document inputDoc,
                                              ReportNameConstants reportNameConstants) throws IOException {
         inputDoc.add(new Paragraph(new Text(OBJECTIVE_HEADER)).setTextAlignment(TextAlignment.LEFT)
-                        .setFontColor(hexaDecimalToRGB(BLACK_HEXA_DECIMAL))
+                .setFontColor(hexaDecimalToRGB(BLACK_HEXA_DECIMAL))
                 .setFont(PdfFontFactory.createFont(HELVETICA_BOLD, PdfEncodings.WINANSI))
                 .setFontSize(HEADING_FONT_SIZE));
 
         createLine(inputDoc);
 
-        switch (reportNameConstants.getReportName()){
-            case "Materialized View Refresh Report" :
+        switch (reportNameConstants.getReportName()) {
+            case "Materialized View Refresh Report":
                 inputDoc.add(new Paragraph
                         (new Text(MATERIALIZED_VIEW_REFRESH_REPORT.getDescriptionHeader() + MATERIALIZED_VIEW_REFRESH_REPORT.getDescription()))
                         .setTextAlignment(TextAlignment.LEFT)
                         .setFontColor(hexaDecimalToRGB(SMOKY_BLACK_HEXA_DECIMAL))
                         .setFontSize(DESC_FONT_SIZE));
                 break;
-            case "Ingestion Report" :
+            case "Ingestion Report":
                 // ingestion
                 break;
-            default :
+            default:
                 break;
         }
 
@@ -239,11 +239,11 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
     private void createHeaderTable(Document inputDoc,
                                    FinalResultBean finalResultBean) throws IOException {
 
-        float[] pointColumnWidths = new float[]{2L, 1.5f ,2L , 1.5f , 2L};
+        float[] pointColumnWidths = new float[]{2L, 1.5f, 2L, 1.5f, 2L};
         Table headerTable = createTable(pointColumnWidths);
         headerTable.setMarginTop(-5f);
 
-        populateCellForHeaderTable(headerTable,finalResultBean);
+        populateCellForHeaderTable(headerTable, finalResultBean);
 
         inputDoc.add(headerTable);
     }
@@ -256,41 +256,39 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
                               boolean jobStatusNeeded,
                               boolean jobStatus) throws IOException {
 
-        Cell cell = new Cell(1,1);
+        Cell cell = new Cell(1, 1);
         Color headerColor = hexaDecimalToRGB(PURE_BLACK_HEXA_DECIMAL);
         Color valueColor = hexaDecimalToRGB(DARK_GREY_HEXA_DECIMAL);
 
         Color backgroundColor = jobStatus ? hexaDecimalToRGB(LIGHT_GREEN_HEXA_DECIMAL) : hexaDecimalToRGB(RED_HEXA_DECIMAL);
 
-       if(text != null && !text.trim().isEmpty())
-       {
-           String[] arr = text.split("\\r?\\n");
+        if (text != null && !text.trim().isEmpty()) {
+            String[] arr = text.split("\\r?\\n");
 
-           if (header) {
+            if (header) {
 
-               cell.add(new Paragraph(new Text(arr[0]))
-                               .setFont(PdfFontFactory.createFont(HELVETICA_BOLD))
-                       .setFontColor(jobStatusNeeded ? WHITE : headerColor));
-               if (arr.length > 1) {
-                   cell.add(new Paragraph(new Text("\t" + arr[1])
-                           .setFontColor(jobStatusNeeded ? WHITE : valueColor)));
-               }
-           }
-           else {
+                cell.add(new Paragraph(new Text(arr[0]))
+                        .setFont(PdfFontFactory.createFont(HELVETICA_BOLD))
+                        .setFontColor(jobStatusNeeded ? WHITE : headerColor));
+                if (arr.length > 1) {
+                    cell.add(new Paragraph(new Text("\t" + arr[1])
+                            .setFontColor(jobStatusNeeded ? WHITE : valueColor)));
+                }
+            } else {
 
-               cell.add(new Paragraph(new Text("\t" + arr[0])
-                       .setFontColor(jobStatusNeeded ? WHITE : valueColor)));
-               if (arr.length > 1) {
-                   cell.add(new Paragraph(new Text(arr[1])
-                           .setFont(PdfFontFactory.createFont(HELVETICA_BOLD))
-                           .setFontColor(jobStatusNeeded ? WHITE : headerColor)));
-               }
+                cell.add(new Paragraph(new Text("\t" + arr[0])
+                        .setFontColor(jobStatusNeeded ? WHITE : valueColor)));
+                if (arr.length > 1) {
+                    cell.add(new Paragraph(new Text(arr[1])
+                            .setFont(PdfFontFactory.createFont(HELVETICA_BOLD))
+                            .setFontColor(jobStatusNeeded ? WHITE : headerColor)));
+                }
 
-           }
+            }
 
-           cell.setTextAlignment(textAlignment);
+            cell.setTextAlignment(textAlignment);
 
-       }
+        }
 
         cell.setKeepTogether(true);
         cell.setFontSize(DESC_FONT_SIZE);
@@ -313,7 +311,7 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
                                        FinalResultBean finalResultBean,
                                        PdfDocument coverPdfDoc) throws IOException {
 
-        addEmptyLines(inputDoc,1);
+        addEmptyLines(inputDoc, 1);
 
         inputDoc.add(new Paragraph(new Text(JOB_SUMMARY)).setTextAlignment(TextAlignment.LEFT)
                 .setFont(PdfFontFactory.createFont(HELVETICA_BOLD, PdfEncodings.WINANSI))
@@ -321,13 +319,13 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
 
         createHalfLine(coverPdfDoc, GREY_SILVER_HEXA_DECIMAL, 740L, 0);
 
-        createStatusColumn(inputDoc,finalResultBean);
+        createStatusColumn(inputDoc, finalResultBean);
 
-        float[] pointColumnWidths = new float[]{3L, 0.5f ,3L , 0.5f , 2L};
+        float[] pointColumnWidths = new float[]{3L, 0.5f, 3L, 0.5f, 2L};
 
         Table applicationSummaryFirstTable = createTable(pointColumnWidths);
 
-        populateCellForJobSummaryTable(applicationSummaryFirstTable,finalResultBean, inputDoc);
+        populateCellForJobSummaryTable(applicationSummaryFirstTable, finalResultBean, inputDoc);
 
         applicationSummaryFirstTable.setMarginTop(-12f);
 
@@ -340,11 +338,11 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
                                             FinalResultBean finalResultBean) throws IOException {
 
 
-        cellCreation(headerTable,GENERATED_BY+finalResultBean.getGeneratedBy(),TextAlignment.LEFT,true,false,false);
-        cellCreation(headerTable,null,TextAlignment.CENTER,false,false,false);
-        cellCreation(headerTable,VIEW_ACTIVITY_SESSION_ID+finalResultBean.getViewActivitySessionId(),TextAlignment.LEFT,true,false,false);
-        cellCreation(headerTable,null,TextAlignment.CENTER,false,false,false);
-        cellCreation(headerTable,REPORT_GENERATED_TIME+finalResultBean.getReportGeneratedTime(),TextAlignment.LEFT,true,false,false);
+        cellCreation(headerTable, GENERATED_BY + finalResultBean.getGeneratedBy(), TextAlignment.LEFT, true, false, false);
+        cellCreation(headerTable, null, TextAlignment.CENTER, false, false, false);
+        cellCreation(headerTable, VIEW_ACTIVITY_SESSION_ID + finalResultBean.getViewActivitySessionId(), TextAlignment.LEFT, true, false, false);
+        cellCreation(headerTable, null, TextAlignment.CENTER, false, false, false);
+        cellCreation(headerTable, REPORT_GENERATED_TIME + finalResultBean.getReportGeneratedTime(), TextAlignment.LEFT, true, false, false);
 
 
     }
@@ -353,27 +351,27 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
     private void populateCellForJobSummaryTable(Table applicationSummaryFirstTable,
                                                 FinalResultBean finalResultBean, Document inputDoc) throws IOException {
 
-        cellCreation(applicationSummaryFirstTable,JOB_TYPE+finalResultBean.getJobType(),TextAlignment.LEFT,true,false,false);
-        cellCreation(applicationSummaryFirstTable,null,TextAlignment.LEFT,false,false,false);
-        cellCreation(applicationSummaryFirstTable,SCHEDULED_BY+finalResultBean.getScheduledBy(),TextAlignment.LEFT,true,false,false);
-        cellCreation(applicationSummaryFirstTable,null,TextAlignment.LEFT,false,false,false);
-        cellCreation(applicationSummaryFirstTable,REPORT_GENERATED_TIME+finalResultBean.getStartTime(),TextAlignment.LEFT,true,false,false);
+        cellCreation(applicationSummaryFirstTable, JOB_TYPE + finalResultBean.getJobType(), TextAlignment.LEFT, true, false, false);
+        cellCreation(applicationSummaryFirstTable, null, TextAlignment.LEFT, false, false, false);
+        cellCreation(applicationSummaryFirstTable, SCHEDULED_BY + finalResultBean.getScheduledBy(), TextAlignment.LEFT, true, false, false);
+        cellCreation(applicationSummaryFirstTable, null, TextAlignment.LEFT, false, false, false);
+        cellCreation(applicationSummaryFirstTable, REPORT_GENERATED_TIME + finalResultBean.getStartTime(), TextAlignment.LEFT, true, false, false);
 
         addEmptyLines(inputDoc, 1);
 
-        cellCreation(applicationSummaryFirstTable,START_TIME+finalResultBean.getStartTime(),TextAlignment.LEFT,true,false,false);
-        cellCreation(applicationSummaryFirstTable,null,TextAlignment.LEFT,true,false,false);
-        cellCreation(applicationSummaryFirstTable,END_TIME+finalResultBean.getEndTime(),TextAlignment.LEFT,true,false,false);
-        cellCreation(applicationSummaryFirstTable,null,TextAlignment.LEFT,true,false,false);
-        cellCreation(applicationSummaryFirstTable,TOTAL_TIME+finalResultBean.getTotalTime(),TextAlignment.LEFT,true,false,false);
+        cellCreation(applicationSummaryFirstTable, START_TIME + finalResultBean.getStartTime(), TextAlignment.LEFT, true, false, false);
+        cellCreation(applicationSummaryFirstTable, null, TextAlignment.LEFT, true, false, false);
+        cellCreation(applicationSummaryFirstTable, END_TIME + finalResultBean.getEndTime(), TextAlignment.LEFT, true, false, false);
+        cellCreation(applicationSummaryFirstTable, null, TextAlignment.LEFT, true, false, false);
+        cellCreation(applicationSummaryFirstTable, TOTAL_TIME + finalResultBean.getTotalTime(), TextAlignment.LEFT, true, false, false);
 
         addEmptyLines(inputDoc, 1);
 
-        cellCreation(applicationSummaryFirstTable,APPLICATION_NAME+finalResultBean.getApplicationName(),TextAlignment.LEFT,true,false,false);
-        cellCreation(applicationSummaryFirstTable,null,TextAlignment.CENTER,false,false,false);
-        cellCreation(applicationSummaryFirstTable,SCHEMA_NAME+finalResultBean.getSchemaName(),TextAlignment.LEFT,true,false,false);
-        cellCreation(applicationSummaryFirstTable,null,TextAlignment.CENTER,false,false,false);
-        cellCreation(applicationSummaryFirstTable,JOB_NAME+finalResultBean.getJobName(),TextAlignment.LEFT,true,false,false);
+        cellCreation(applicationSummaryFirstTable, APPLICATION_NAME + finalResultBean.getApplicationName(), TextAlignment.LEFT, true, false, false);
+        cellCreation(applicationSummaryFirstTable, null, TextAlignment.CENTER, false, false, false);
+        cellCreation(applicationSummaryFirstTable, SCHEMA_NAME + finalResultBean.getSchemaName(), TextAlignment.LEFT, true, false, false);
+        cellCreation(applicationSummaryFirstTable, null, TextAlignment.CENTER, false, false, false);
+        cellCreation(applicationSummaryFirstTable, JOB_NAME + finalResultBean.getJobName(), TextAlignment.LEFT, true, false, false);
 
     }
 
@@ -385,7 +383,7 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
         PdfPage pdfPage = coverPdfDoc.getPage(1);
         PdfCanvas canvas = new PdfCanvas(pdfPage);
         canvas.setStrokeColor(hexaDecimalToRGB(hexaDecimal));
-        canvasWrite(canvas,pdfPage.getPageSize().getWidth()-30,height,30);
+        canvasWrite(canvas, pdfPage.getPageSize().getWidth() - 30, height, 30);
         canvas.setLineWidth(lineWidth);
         canvas.closePathStroke();
     }
@@ -400,14 +398,14 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
         boolean isJobSuccess = finalResultBean.getJobStatus().equalsIgnoreCase(SUCCESS);
 
         cellCreation(table,
-                 JOB_STATUS+finalResultBean.getJobStatus(),
+                JOB_STATUS + finalResultBean.getJobStatus(),
                 TextAlignment.LEFT,
                 false,
                 true,
                 isJobSuccess);
 
-        if(!isJobSuccess){
-            cellCreation(table, ERROR_MESSAGE_HEADER+ERROR_MESSAGE,TextAlignment.LEFT,false,true,false);
+        if (!isJobSuccess) {
+            cellCreation(table, ERROR_MESSAGE_HEADER + ERROR_MESSAGE, TextAlignment.LEFT, false, true, false);
         }
 
         inputDoc.add(table);
@@ -445,7 +443,7 @@ at com.p3solutions.mobius.core.services.fork_join.CustomForkJoinRecursiveTask.co
 
         Rectangle rect = new Rectangle(0, 0);
         PdfLinkAnnotation annotation = new PdfLinkAnnotation(rect);
-        annotation.setBorder(new PdfArray(new int[]{0,0,0}));
+        annotation.setBorder(new PdfArray(new int[]{0, 0, 0}));
 
         PdfAction action = PdfAction.createURI(PLATFORM_3_SOLUTIONS_URL);
         annotation.setAction(action);

@@ -19,9 +19,11 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.34'
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
 
-    // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.11'
     implementation 'org.slf4j:slf4j-api:1.7.32'
+
+    implementation 'org.modelmapper:modelmapper:2.3.0'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-guava:2.1.2'
 
 
 }

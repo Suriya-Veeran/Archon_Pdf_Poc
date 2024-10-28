@@ -3,7 +3,6 @@ package com.p3solutions.archon_report_utility.reports;
 import com.itextpdf.kernel.colors.Color;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Image;
-import com.itextpdf.layout.element.Link;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.TextAlignment;
@@ -30,18 +29,15 @@ public interface ExecutableClass {
 
     void documentClose();
 
-
     void setCell(ColumnInputBean columnInputBean, Table table) throws IOException;
 
     void setCellTemplateContent(ColumnInputBean columnInputBean, Table table, List<String> contentList) throws IOException;
 
-
     void addEmptyLines(int numberOfPages);
-
 
     Paragraph createParagraph(ParagraphInputBean paragraphInputBean);
 
-     Paragraph createParagraph(Image image);
+    Paragraph createParagraph(Image image);
 
     Paragraph createParagraph(float textWidth,
                               TextAlignment textAlignment,
@@ -65,7 +61,7 @@ public interface ExecutableClass {
                           String hexaDecimal,
                           TextAlignment textAlignment,
                           int fontSize,
-                          String font ) throws IOException;
+                          String font) throws IOException;
 
     void addParagraphIntoDocument(Paragraph paragraph);
 

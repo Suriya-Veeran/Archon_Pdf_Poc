@@ -23,5 +23,5 @@ public class ParagraphInputBean {
     private String firstText;
     private Link link;
     private String endText;
-    
+
 }

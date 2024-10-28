@@ -17,7 +17,4 @@ public class TableInputBean {
     private int numberOfColumns;
 
 
-
-
-
 }
