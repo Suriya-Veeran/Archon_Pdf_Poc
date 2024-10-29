@@ -3,9 +3,13 @@ package com.p3solutions.archon_report_utility.utils;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.VerticalAlignment;
+import com.p3solutions.archon_report_utility.beans.input_bean.OptimizationStatisticsBean;
 import com.p3solutions.archon_report_utility.beans.utils.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.p3solutions.archon_report_utility.constants.ColorConstants.*;
 import static com.p3solutions.archon_report_utility.constants.FontConstants.HELVETICA;
@@ -91,10 +95,10 @@ public class BeanUtils {
                 .build();
     }
 
-    public static HeaderInputBean buildHeaderInputBean() {
+    public static HeaderInputBean buildHeaderInputBean(String name) {
         return HeaderInputBean
                 .builder()
-                .content("Materialized View Report")
+                .content(name)
                 .fontSize(12)
                 .backgroundColor(hexaDecimalToRGB(BLACK_HEXA_DECIMAL))
                 .font(HELVETICA_BOLD)
@@ -137,58 +141,13 @@ public class BeanUtils {
                 .build();
     }
 
-//    public static TableInputBean createTable(int width, int columns, boolean keepTogether) {
-//        return TableInputBean
-//                .builder()
-//                .width(width)
-//                .numberOfColumns(columns)
-//                .keepTogether(keepTogether)
-//                .border(Border.NO_BORDER)
-//                .build();
-//    }
-//
-//    public static ColumnInputBean createColumn(String text,
-//                                               String fontColorHex,
-//                                               int fontSize,
-//                                               boolean isHeader) {
-//        return ColumnInputBean
-//                .builder()
-//                .content(text)
-//                .fontSize(fontSize)
-//                .fontColor(hexaDecimalToRGB(fontColorHex))
-//                .font(isHeader ? HELVETICA_BOLD : HELVETICA)
-//                .backgroundColor(isHeader ? WHITE : GRAY)
-//                .border(Border.NO_BORDER)
-//                .build();
-//    }
-//
-//    public static HeaderInputBean createHeader(String content,
-//                                               boolean isLogoNeeded) {
-//        return HeaderInputBean
-//                .builder()
-//                .content(content)
-//                .fontSize(HEADING_FONT_SIZE)
-//                .backgroundColor(hexaDecimalToRGB(PURE_BLACK_HEXA_DECIMAL))
-//                .isLogoNeeded(isLogoNeeded)
-//                .imagePath(isLogoNeeded ? ARCHON_LOGO : null)
-//                .build();
-//    }
-//
-//    public static FooterInputBean createFooter(String url,
-//                                               String linkText,
-//                                               String copyRightText,
-//                                               String reservedText) {
-//        return FooterInputBean
-//                .builder()
-//                .url(url)
-//                .linkText(linkText)
-//                .copyRightText(copyRightText)
-//                .allRightsReservedText(reservedText)
-//                .fontSize(FOOTER_FONT_SIZE)
-//                .font(HELVETICA)
-//                .border(Border.NO_BORDER)
-//                .build();
-//    }
-
+    public static OptimizationStatisticsBean buildOptimizationStatisticsBean(List<String> headerValues) {
+        List<String> valueList = new ArrayList<>();
+        return OptimizationStatisticsBean
+                .builder()
+                .headers(headerValues)
+                .values(valueList)
+                .build();
+    }
 
 }

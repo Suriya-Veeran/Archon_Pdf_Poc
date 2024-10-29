@@ -21,11 +21,12 @@ public class ColorConstants {
     public static final Color PINK = new DeviceRgb(255, 175, 175);
     public static final Color RED = new DeviceRgb(255, 0, 0);
     public static final Color DARK_RED = new DeviceRgb(139, 0, 0);
-    public static final Color WHITE = new DeviceRgb(255, 255, 255);
     public static final Color YELLOW = new DeviceRgb(255, 255, 0);
     public static final Color FIELDS_GREY_COLOR = new DeviceRgb(238, 238, 238);
 
 
+
+    public static final Color WHITE = new DeviceRgb(255, 255, 255);
 
     public static Color hexaDecimalToRGB(String hexaDecimal) {
         int r = Integer.valueOf(hexaDecimal.substring(0, 2), 16);

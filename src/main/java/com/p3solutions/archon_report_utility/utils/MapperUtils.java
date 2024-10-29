@@ -36,7 +36,7 @@ public class MapperUtils {
         } catch (JsonProcessingException e) {
             log.error(ERROR_LOG_TEMPLATE, e.getMessage());
         }
-        return null;
+        return new byte[0];
     }
 
     public <T> T map(final String entity, Class<T> outClass) {

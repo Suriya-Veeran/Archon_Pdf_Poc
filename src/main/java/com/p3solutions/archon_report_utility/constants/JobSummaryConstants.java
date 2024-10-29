@@ -22,8 +22,11 @@ public class JobSummaryConstants {
 
     public static final String SCHEMA_NAME = "Schema Name\n";
 
+    public static final String TABLE_NAME = "Table Name\n";
+
     public static final String JOB_NAME = "Job Name\n";
 
+    public static final String JOB_INSTANCE_ID = "Job Instance ID\n";
 
     public static final String SUCCESS = "Success";
 

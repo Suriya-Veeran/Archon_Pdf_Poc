@@ -127,7 +127,7 @@ public class GenerateReport {
                 generateMaterializedReport(finalResultBean, inputDoc, coverPdfDoc);
                 break;
             case "INGESTION":
-                // TODO : INGESTION
+                log.error("ingestion started");
                 break;
             default:
                 break;

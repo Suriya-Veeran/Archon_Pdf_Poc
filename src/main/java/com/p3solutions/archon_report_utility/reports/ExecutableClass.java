@@ -2,11 +2,13 @@ package com.p3solutions.archon_report_utility.reports;
 
 import com.itextpdf.kernel.colors.Color;
 import com.itextpdf.layout.borders.Border;
+import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.VerticalAlignment;
+import com.p3solutions.archon_report_utility.beans.input_bean.OptimizationStatisticsBean;
 import com.p3solutions.archon_report_utility.beans.utils.*;
 
 import java.io.IOException;
@@ -69,5 +71,13 @@ public interface ExecutableClass {
     void createJobStatusTable(String header, String value, Table statusTable) throws IOException;
 
     void createPieChart();
+
+    Table setOptimizationStatistics(OptimizationStatisticsBean optimizationStatisticsBean, Table optimizationSettingTable);
+
+    void setHeaderCell(Cell cell, Table table);
+
+    void setDataCell(Cell cell, Table table);
+
+    void setHiddenWatermarkImage(String location, String imagePath, String message ) throws IOException;
 
 }
