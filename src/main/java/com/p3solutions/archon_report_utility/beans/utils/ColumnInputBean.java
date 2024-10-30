@@ -28,4 +28,7 @@ public class ColumnInputBean {
     private int columnSpan;
     private int cellHeight;
 
+    private boolean isJobSummaryHeader;
+    private boolean valueHeader;
+
 }

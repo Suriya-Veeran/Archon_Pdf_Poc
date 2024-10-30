@@ -39,6 +39,8 @@ public class ColorConstants {
 
     public static final String RED_HEXA_DECIMAL = "D60000";
 
+    public static final String ERROR_MESSAGE_DECIMAL = "faf5f5";
+
     public static final String DIVIDER_LINE_HEXA_DECIMAL = "E9E9E9";
 
     public static final String ASH_HEXA_DECIMAL = "BCBCBC";
@@ -49,7 +51,8 @@ public class ColorConstants {
 
     public static final String PURE_BLACK_HEXA_DECIMAL = "000000";
 
-    public static final String DARK_GREY_HEXA_DECIMAL = "2C2C2C";
+//    public static final String DARK_GREY_HEXA_DECIMAL = "2C2C2C";
+    public static final String DARK_GREY_HEXA_DECIMAL = "1a1a1a";
 
     public static final String GREY_SILVER_HEXA_DECIMAL = "B8B8B8";
 

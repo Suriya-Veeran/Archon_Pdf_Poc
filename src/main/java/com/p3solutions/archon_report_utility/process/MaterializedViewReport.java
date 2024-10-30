@@ -6,8 +6,7 @@ import static com.p3solutions.archon_report_utility.constants.FontConstants.HELV
 import static com.p3solutions.archon_report_utility.constants.FontConstants.HELVETICA_BOLD;
 import static com.p3solutions.archon_report_utility.constants.FontSizeConstants.HEADING_FONT_SIZE;
 import static com.p3solutions.archon_report_utility.constants.HeaderConstants.*;
-import static com.p3solutions.archon_report_utility.constants.JobSummaryConstants.JOB_STATUS;
-import static com.p3solutions.archon_report_utility.constants.JobSummaryConstants.SUCCESS;
+import static com.p3solutions.archon_report_utility.constants.JobSummaryConstants.*;
 import static com.p3solutions.archon_report_utility.utils.BeanUtils.*;
 import static com.p3solutions.archon_report_utility.utils.ContentUtils.*;
 
@@ -47,20 +46,23 @@ public class MaterializedViewReport extends ReportUtils {
 
     executableClass.createDivider(buildDividerInputBean(800L, 0.5f, DIVIDER_LINE_HEXA_DECIMAL));
 
-    executableClass.createDivider(buildDividerInputBean(760L, 1, ASH_HEXA_DECIMAL));
+    executableClass.createDivider(buildDividerInputBean(762L, 1, ASH_HEXA_DECIMAL));
+
+    executableClass.addEmptyLines(1);
 
     executableClass.createHeaderText(
         JOB_SUMMARY, BLACK_HEXA_DECIMAL, TextAlignment.LEFT, HEADING_FONT_SIZE, HELVETICA_BOLD);
 
-    executableClass.createHalfDivider(buildDividerInputBean(735L, 1, GREY_SILVER_HEXA_DECIMAL));
+    executableClass.createHalfDivider(buildDividerInputBean(730L, 1, GREY_SILVER_HEXA_DECIMAL));
 
     Table statusTable = executableClass.setTable(buildTableInputBean());
 
-    executableClass.createJobStatusTable(JOB_STATUS, SUCCESS, statusTable);
+    executableClass.createJobStatusTable(JOB_STATUS, FAILURE, statusTable);
 
-    statusTable.setMarginLeft(-18);
+    Table errorTable = executableClass.setTable(buildTableInputBean());
 
-    executableClass.addTableIntoDocument(statusTable);
+    executableClass.createJobStatusFailureTable(ERROR_MESSAGE_HEADER, FAILURE, errorTable);
+
 
     executableClass.addEmptyLines(1);
 
@@ -73,7 +75,7 @@ public class MaterializedViewReport extends ReportUtils {
 
     executableClass.addTableIntoDocument(summaryTable);
 
-    executableClass.createHalfDivider(buildDividerInputBean(572L, 1, GREY_SILVER_HEXA_DECIMAL));
+    executableClass.createHalfDivider(buildDividerInputBean(570L, 1, GREY_SILVER_HEXA_DECIMAL));
 
     executableClass.addEmptyLines(1);
 
@@ -86,8 +88,7 @@ public class MaterializedViewReport extends ReportUtils {
 
     String text =
         """
-                The materialised view after being created once, needs to be refreshed at intervals to get real time data. Find the details of this job run below.
-                This report gives details on materialised view updates.
+                The materialised view after being created once, needs to be refreshed at intervals to get real time data. Find the details of this job run below. This report gives details on materialised view updates.
                 """;
 
     Paragraph objectiveParagraph =
@@ -101,9 +102,11 @@ public class MaterializedViewReport extends ReportUtils {
 
     objectiveParagraph.setMarginLeft(-18);
 
+    objectiveParagraph.setMarginRight(-18);
+
     executableClass.addParagraphIntoDocument(objectiveParagraph);
 
-    executableClass.createHalfDivider(buildDividerInputBean(515L, 1, GREY_SILVER_HEXA_DECIMAL));
+    executableClass.createHalfDivider(buildDividerInputBean(508L, 1, GREY_SILVER_HEXA_DECIMAL));
 
     executableClass.addEmptyLines(1);
 

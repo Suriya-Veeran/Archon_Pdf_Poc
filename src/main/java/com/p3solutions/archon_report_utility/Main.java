@@ -8,12 +8,12 @@ import java.io.IOException;
 
 public class Main {
   public static void main(String[] args) throws IOException {
-    ReportNameConstants reportNameConstants = ReportNameConstants.TABLE_OPTIMIZATION_REPORT;
+    ReportNameConstants reportNameConstants = ReportNameConstants.MATERIALIZED_VIEW_REFRESH_REPORT;
     switch (reportNameConstants) {
       case MATERIALIZED_VIEW_REFRESH_REPORT:
         MaterializedViewReport materializedViewReport =
             new MaterializedViewReport(
-                "/home/p3/IdeaProjects/Pdf_POC/src/main/resources/pdf_report"
+                "C:\\Users\\P3INW82\\IdeaProjects\\Archon_Pdf_Poc\\src\\main\\resources\\pdf_report"
                     + File.separator
                     + reportNameConstants.getFileName());
         materializedViewReport.generateReport();

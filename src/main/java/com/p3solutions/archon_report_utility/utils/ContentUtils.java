@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import static com.p3solutions.archon_report_utility.constants.HeaderConstants.*;
 import static com.p3solutions.archon_report_utility.constants.JobSummaryConstants.*;
@@ -22,7 +23,7 @@ public class ContentUtils {
 
         List<String> contentList = new ArrayList<>();
         contentList.add(GENERATED_BY + SYS_ADMIN);
-        switch (reportNameConstants) {
+        switch (Objects.requireNonNull(reportNameConstants)) {
             case MATERIALIZED_VIEW_REFRESH_REPORT :
                 contentList.add(VIEW_ACTIVITY_SESSION_ID + 12333727);
                  break;

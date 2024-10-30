@@ -12,6 +12,8 @@ public class FontConstants {
 
     public static final String HELVETICA_OBLIQUE = "Helvetica-Oblique";
 
+    public static final String HELVETICA_BOLD_OBLIQUE = "Helvetica-BoldOblique";
+
     public static final String TIMES_NEW_ROMAN = "Times-Roman";
 
 

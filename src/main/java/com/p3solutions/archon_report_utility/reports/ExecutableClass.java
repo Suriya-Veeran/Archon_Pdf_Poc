@@ -80,4 +80,6 @@ public interface ExecutableClass {
 
     void setHiddenWatermarkImage(String location, String imagePath, String message ) throws IOException;
 
+    void createJobStatusFailureTable(String errorMessageHeader, String failure, Table errorTable) throws IOException;
+
 }

@@ -30,6 +30,8 @@ public class JobSummaryConstants {
 
     public static final String SUCCESS = "Success";
 
+    public static final String FAILURE = "Failure";
+
     public static final String JOB_STATUS = "Job Status : ";
 
     public static final String ERROR_MESSAGE_HEADER = "Error Message : ";
