@@ -47,7 +47,9 @@ public class BeanUtils {
                 .rowSpan(1)
                 .columnSpan(1)
                 .cellHeight(CELL_HEIGHT_FOR_HEADER_TABLE)
-                .isHeader(true)
+                .isHeader(false)
+                .valueHeader(true)
+                .isJobSummaryHeader(false)
                 .build();
     }
 
@@ -64,6 +66,8 @@ public class BeanUtils {
                 .columnSpan(1)
                 .cellHeight(CELL_HEIGHT_FOR_HEADER_TABLE)
                 .isHeader(false)
+                .valueHeader(false)
+                .isJobSummaryHeader(true)
                 .build();
     }
 
@@ -79,6 +83,8 @@ public class BeanUtils {
                 .columnSpan(1)
                 .cellHeight(CELL_HEIGHT_FOR_HEADER_TABLE)
                 .isHeader(false)
+                .valueHeader(false)
+                .isJobSummaryHeader(true)
                 .build();
     }
 
@@ -135,9 +141,9 @@ public class BeanUtils {
                 .fontColor(hexaDecimalToRGB(PURE_BLACK_HEXA_DECIMAL))
                 .border(Border.NO_BORDER)
                 .textAlignmentHeight(15)
-                .textAlignmentWidth(20)
+                .textAlignmentWidth(18)
                 .pageAlignmentHeight(15)
-                .pageAlignmentWidth(525)
+                .pageAlignmentWidth(30)
                 .build();
     }
 
