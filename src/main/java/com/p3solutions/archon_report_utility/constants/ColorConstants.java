@@ -39,7 +39,7 @@ public class ColorConstants {
 
     public static final String RED_HEXA_DECIMAL = "D60000";
 
-    public static final String ERROR_MESSAGE_DECIMAL = "faf5f5";
+    public static final String ERROR_MESSAGE_DECIMAL = "ffeaea";
 
     public static final String DIVIDER_LINE_HEXA_DECIMAL = "E9E9E9";
 

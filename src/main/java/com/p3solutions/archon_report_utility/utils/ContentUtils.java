@@ -11,7 +11,9 @@ import java.util.Objects;
 
 import static com.p3solutions.archon_report_utility.constants.HeaderConstants.*;
 import static com.p3solutions.archon_report_utility.constants.JobSummaryConstants.*;
-import static com.p3solutions.archon_report_utility.constants.report_constants.MaterializedViewConstants.*;
+import static com.p3solutions.archon_report_utility.constants.report_constants.MaterializedViewConstants.RECORDS_COUNT_AFTER_REFRESH;
+import static com.p3solutions.archon_report_utility.constants.report_constants.MaterializedViewConstants.RECORDS_COUNT_BEFORE_REFRESH;
+import static com.p3solutions.archon_report_utility.constants.report_constants.TableDataOptimizationReportConstants.*;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ContentUtils {
@@ -78,10 +80,10 @@ public class ContentUtils {
 
     public static List<String> buildHeaderValues(){
         List<String> headerValues = new ArrayList<>();
-        headerValues.add("Description");
-        headerValues.add("Count of pre-data optimization");
-        headerValues.add("Count of post-data optimization");
-        headerValues.add("Message");
+        headerValues.add(DESCRIPTION);
+        headerValues.add(COUNT_OF_PRE_DATA_OPTIMIZATION);
+        headerValues.add(COUNT_OF_POST_DATA_OPTIMIZATION);
+        headerValues.add(MESSAGE);
         return headerValues;
     }
 

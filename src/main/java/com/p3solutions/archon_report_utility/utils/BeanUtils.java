@@ -17,6 +17,7 @@ import static com.p3solutions.archon_report_utility.constants.FontConstants.HELV
 import static com.p3solutions.archon_report_utility.constants.FontSizeConstants.*;
 import static com.p3solutions.archon_report_utility.constants.FontSizeConstants.FOOTER_FONT_SIZE;
 import static com.p3solutions.archon_report_utility.constants.ImageConstants.ARCHON_LOGO;
+import static com.p3solutions.archon_report_utility.constants.JobSummaryConstants.SUCCESS;
 import static com.p3solutions.archon_report_utility.constants.ServiceConstants.*;
 import static com.p3solutions.archon_report_utility.constants.ServiceConstants.ALL_RIGHTS_RESERVED;
 
@@ -50,6 +51,7 @@ public class BeanUtils {
                 .isHeader(false)
                 .valueHeader(true)
                 .isJobSummaryHeader(false)
+                .jobStatus(SUCCESS)
                 .build();
     }
 
@@ -140,9 +142,9 @@ public class BeanUtils {
                 .font(HELVETICA)
                 .fontColor(hexaDecimalToRGB(PURE_BLACK_HEXA_DECIMAL))
                 .border(Border.NO_BORDER)
-                .textAlignmentHeight(15)
+                .textAlignmentHeight(10)
                 .textAlignmentWidth(18)
-                .pageAlignmentHeight(15)
+                .pageAlignmentHeight(10)
                 .pageAlignmentWidth(30)
                 .build();
     }

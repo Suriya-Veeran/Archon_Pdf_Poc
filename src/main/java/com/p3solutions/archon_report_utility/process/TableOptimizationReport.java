@@ -1,18 +1,5 @@
 package com.p3solutions.archon_report_utility.process;
 
-import static com.p3solutions.archon_report_utility.constants.ColorConstants.*;
-import static com.p3solutions.archon_report_utility.constants.ColorConstants.GREY_SILVER_HEXA_DECIMAL;
-import static com.p3solutions.archon_report_utility.constants.FontConstants.HELVETICA;
-import static com.p3solutions.archon_report_utility.constants.FontConstants.HELVETICA_BOLD;
-import static com.p3solutions.archon_report_utility.constants.FontSizeConstants.HEADING_FONT_SIZE;
-import static com.p3solutions.archon_report_utility.constants.HeaderConstants.JOB_SUMMARY;
-import static com.p3solutions.archon_report_utility.constants.HeaderConstants.OBJECTIVE_HEADER;
-import static com.p3solutions.archon_report_utility.constants.JobSummaryConstants.JOB_STATUS;
-import static com.p3solutions.archon_report_utility.constants.JobSummaryConstants.SUCCESS;
-import static com.p3solutions.archon_report_utility.constants.report_constants.TableDataOptimizationReport.*;
-import static com.p3solutions.archon_report_utility.utils.BeanUtils.*;
-import static com.p3solutions.archon_report_utility.utils.ContentUtils.*;
-
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.TextAlignment;
@@ -20,119 +7,125 @@ import com.itextpdf.layout.property.VerticalAlignment;
 import com.p3solutions.archon_report_utility.constants.ReportNameConstants;
 import com.p3solutions.archon_report_utility.reports.ExecutableClass;
 import com.p3solutions.archon_report_utility.utils.ReportUtils;
+
 import java.io.IOException;
+
+import static com.p3solutions.archon_report_utility.constants.ColorConstants.*;
+import static com.p3solutions.archon_report_utility.constants.FontConstants.HELVETICA;
+import static com.p3solutions.archon_report_utility.constants.FontConstants.HELVETICA_BOLD;
+import static com.p3solutions.archon_report_utility.constants.FontSizeConstants.DESC_FONT_SIZE;
+import static com.p3solutions.archon_report_utility.constants.FontSizeConstants.HEADING_FONT_SIZE;
+import static com.p3solutions.archon_report_utility.constants.HeaderConstants.JOB_SUMMARY;
+import static com.p3solutions.archon_report_utility.constants.HeaderConstants.OBJECTIVE_HEADER;
+import static com.p3solutions.archon_report_utility.constants.JobSummaryConstants.JOB_STATUS;
+import static com.p3solutions.archon_report_utility.constants.JobSummaryConstants.SUCCESS;
+import static com.p3solutions.archon_report_utility.constants.report_constants.TableDataOptimizationReportConstants.*;
+import static com.p3solutions.archon_report_utility.utils.BeanUtils.*;
+import static com.p3solutions.archon_report_utility.utils.ContentUtils.*;
 
 public class TableOptimizationReport extends ReportUtils {
 
-  public TableOptimizationReport(String outputPath) {
-    super(outputPath);
-  }
+    public TableOptimizationReport(String outputPath) {
+        super(outputPath);
+    }
 
-  public void generateReport() throws IOException {
+    public void generateReport() throws IOException {
 
-    float[] pointColumnWidths = new float[] {450L, 450L, 450L};
 
-    ExecutableClass executableClass = new ReportUtils(outputPath);
-    executableClass.reportProcessInitiated();
+        ExecutableClass executableClass = new ReportUtils(outputPath);
+        executableClass.reportProcessInitiated();
 
-    executableClass.addEmptyLines(1);
+        executableClass.addEmptyLines(1);
 
-    Table table = executableClass.setTable(buildTableInputBean(), pointColumnWidths);
+        Table table = executableClass.setTable(buildTableInputBean(), POINT_COLUMN_WIDTH);
 
-    table.setMarginLeft(-18);
+        table.setMarginLeft(LEFT_MARGIN_WIDTH);
 
-    executableClass.setCellTemplateContent(buildColumnInputBean(), table, buildContentForColumn("Table Data Optimization Report"));
+        executableClass.setCellTemplateContent(buildColumnInputBean(),
+                table,
+                buildContentForColumn(ReportNameConstants.TABLE_OPTIMIZATION_REPORT.getReportName()));
 
-    executableClass.addTableIntoDocument(table);
+        executableClass.addTableIntoDocument(table);
 
-    executableClass.addEmptyLines(1);
+        executableClass.addEmptyLines(1);
 
-    executableClass.createDivider(buildDividerInputBean(800L, 0.5f, DIVIDER_LINE_HEXA_DECIMAL));
+        executableClass.createDivider(buildDividerInputBean(800L, 0.5f, DIVIDER_LINE_HEXA_DECIMAL));
 
-    executableClass.createDivider(buildDividerInputBean(760L, 1, ASH_HEXA_DECIMAL));
+        executableClass.createDivider(buildDividerInputBean(760L, 1, ASH_HEXA_DECIMAL));
 
-    executableClass.createHeaderText(
-        JOB_SUMMARY, BLACK_HEXA_DECIMAL, TextAlignment.LEFT, HEADING_FONT_SIZE, HELVETICA_BOLD);
+        executableClass.addEmptyLines(1);
 
-    executableClass.createHalfDivider(buildDividerInputBean(735L, 1, GREY_SILVER_HEXA_DECIMAL));
+        executableClass.createHeaderText(JOB_SUMMARY,
+                BLACK_HEXA_DECIMAL,
+                TextAlignment.LEFT,
+                HEADING_FONT_SIZE,
+                HELVETICA_BOLD);
 
-    Table statusTable = executableClass.setTable(buildTableInputBean());
+        executableClass.createHalfDivider(buildDividerInputBean(730L, 1, GREY_SILVER_HEXA_DECIMAL));
 
-    executableClass.createJobStatusTable(JOB_STATUS, SUCCESS, statusTable);
+        Table statusTable = executableClass.setTable(buildTableInputBean());
 
-    statusTable.setMarginLeft(-18);
+        executableClass.createJobStatusTable(JOB_STATUS, SUCCESS, statusTable);
 
-    executableClass.addTableIntoDocument(statusTable);
+        statusTable.setMarginLeft(LEFT_MARGIN_WIDTH);
 
-    executableClass.addEmptyLines(1);
+        Table summaryTable = executableClass.setTable(buildTableInputBean(), POINT_COLUMN_WIDTH);
 
-    Table summaryTable = executableClass.setTable(buildTableInputBean(), pointColumnWidths);
+        summaryTable.setMarginLeft(LEFT_MARGIN_WIDTH);
 
-    summaryTable.setMarginLeft(-18);
+        executableClass.setCellTemplateContent(buildColumnInputBeanForJobSummary(),
+                summaryTable,
+                buildContentForJobSummaryForTableData());
 
-    executableClass.setCellTemplateContent(
-        buildColumnInputBeanForJobSummary(), summaryTable, buildContentForJobSummaryForTableData());
+        executableClass.addTableIntoDocument(summaryTable);
 
-    executableClass.addTableIntoDocument(summaryTable);
+        executableClass.createHalfDivider(buildDividerInputBean(550L, 1, GREY_SILVER_HEXA_DECIMAL));
 
-    executableClass.createHalfDivider(buildDividerInputBean(550L, 1, GREY_SILVER_HEXA_DECIMAL));
+        executableClass.createHeaderText(OBJECTIVE_HEADER,
+                BLACK_HEXA_DECIMAL,
+                TextAlignment.LEFT,
+                HEADING_FONT_SIZE,
+                HELVETICA_BOLD);
 
-    executableClass.createHeaderText(
-        OBJECTIVE_HEADER,
-        BLACK_HEXA_DECIMAL,
-        TextAlignment.LEFT,
-        HEADING_FONT_SIZE,
-        HELVETICA_BOLD);
 
-    String text =
-        """
-                This report shows the Storage optimisation achieved after the process run. Table data optimisation jobs identify scope of optimizing the way this data is stored using all the daat and metadata information available for that table. This involves techniques like merging data sets , compressing data,cleaning up fragmented storage etc.
-                """;
+        Paragraph objectiveParagraph = executableClass.createParagraph(
+                ReportNameConstants.TABLE_OPTIMIZATION_REPORT.getDescription(),
+                hexaDecimalToRGB(SMOKY_BLACK_HEXA_DECIMAL),
+                TextAlignment.LEFT,
+                VerticalAlignment.TOP,
+                DESC_FONT_SIZE,
+                HELVETICA);
 
-    Paragraph objectiveParagraph =
-        executableClass.createParagraph(
-            text,
-            hexaDecimalToRGB(SMOKY_BLACK_HEXA_DECIMAL),
-            TextAlignment.LEFT,
-            VerticalAlignment.TOP,
-            8,
-            HELVETICA);
+        objectiveParagraph.setMarginLeft(LEFT_MARGIN_WIDTH);
 
-    objectiveParagraph.setMarginLeft(-18);
+        executableClass.addParagraphIntoDocument(objectiveParagraph);
 
-    executableClass.addParagraphIntoDocument(objectiveParagraph);
+        executableClass.addEmptyLines(1);
 
-    executableClass.createHalfDivider(buildDividerInputBean(500, 1, GREY_SILVER_HEXA_DECIMAL));
+        executableClass.createHeaderText(OPTIMIZATION_STATISTICS,
+                BLACK_HEXA_DECIMAL,
+                TextAlignment.LEFT,
+                HEADING_FONT_SIZE,
+                HELVETICA_BOLD);
 
-    executableClass.addEmptyLines(1);
+        executableClass.createHalfDivider(buildDividerInputBean(475, 1, GREY_SILVER_HEXA_DECIMAL));
 
-    executableClass.createHeaderText(
-        OPTIMIZATION_STATISTICS,
-        BLACK_HEXA_DECIMAL,
-        TextAlignment.LEFT,
-        HEADING_FONT_SIZE,
-        HELVETICA_BOLD);
+        executableClass.addEmptyLines(1);
 
-    executableClass.createHalfDivider(buildDividerInputBean(475, 1, GREY_SILVER_HEXA_DECIMAL));
+        Table optimizationSettingTable = executableClass.setTable(buildTableInputBean(), POINT_COLUMN_WIDTH);
 
-    executableClass.addEmptyLines(1);
+        optimizationSettingTable = executableClass.setOptimizationStatistics
+                (buildOptimizationStatisticsBean(buildHeaderValues()),
+                        optimizationSettingTable);
 
-    Table optimizationSettingTable =
-        executableClass.setTable(buildTableInputBean(), pointColumnWidths);
+        executableClass.addTableIntoDocument(optimizationSettingTable);
 
-    optimizationSettingTable =
-        executableClass.setOptimizationStatistics(
-            buildOptimizationStatisticsBean(buildHeaderValues()), optimizationSettingTable);
+        executableClass.addHeader(buildHeaderInputBean(ReportNameConstants.TABLE_OPTIMIZATION_REPORT.getReportName()));
 
-    executableClass.addTableIntoDocument(optimizationSettingTable);
+        executableClass.setFooter(buildFooterInputBean());
 
-    executableClass.addHeader(
-        buildHeaderInputBean(ReportNameConstants.TABLE_OPTIMIZATION_REPORT.getReportName()));
+        executableClass.createDivider(buildDividerInputBean(30L, 1, GREY_SILVER_HEXA_DECIMAL));
 
-    executableClass.setFooter(buildFooterInputBean());
-
-    executableClass.createDivider(buildDividerInputBean(30L, 1, GREY_SILVER_HEXA_DECIMAL));
-
-    executableClass.documentClose();
-  }
+        executableClass.documentClose();
+    }
 }

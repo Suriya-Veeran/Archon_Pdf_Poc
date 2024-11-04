@@ -9,4 +9,8 @@ public class MaterializedViewConstants {
     public static final String RECORDS_COUNT_BEFORE_REFRESH = "Record count Before Refresh\n";
 
     public static final String RECORDS_COUNT_AFTER_REFRESH = "Record count After Refresh\n";
+
+    public static final  float[]  POINT_COLUMN_WIDTH = new float[] {450L, 450L, 450L};
+
+    public static final float LEFT_MARGIN = -18;
 }

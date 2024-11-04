@@ -222,7 +222,7 @@ public class GenerateReport {
         switch (reportNameConstants.getReportName()) {
             case "Materialized View Refresh Report":
                 inputDoc.add(new Paragraph
-                        (new Text(MATERIALIZED_VIEW_REFRESH_REPORT.getDescriptionHeader() + MATERIALIZED_VIEW_REFRESH_REPORT.getDescription()))
+                        (new Text(MATERIALIZED_VIEW_REFRESH_REPORT.getDescription()))
                         .setTextAlignment(TextAlignment.LEFT)
                         .setFontColor(hexaDecimalToRGB(SMOKY_BLACK_HEXA_DECIMAL))
                         .setFontSize(DESC_FONT_SIZE));

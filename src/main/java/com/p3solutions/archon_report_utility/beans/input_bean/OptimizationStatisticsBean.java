@@ -6,6 +6,10 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+ * stored the value for Optimization Statistics Bean
+ */
+
 @Getter
 @Setter
 @Builder

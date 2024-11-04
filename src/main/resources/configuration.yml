@@ -1,4 +1,4 @@
 # config.yml
 location: "C:\\Users\\P3INW82\\IdeaProjects\\Archon_Pdf_Poc\\src\\main\\resources\\pdf_report"
-reportName: "Table Data Optimization Report"
+reportName: "Materialized View Refresh Report"
 imagePath: "C:\\Users\\P3INW82\\IdeaProjects\\Archon_Pdf_Poc\\src\\main\\resources\\Archon-Datastore rasterized.png"

@@ -30,5 +30,6 @@ public class ColumnInputBean {
 
     private boolean isJobSummaryHeader;
     private boolean valueHeader;
+    private String jobStatus;
 
 }

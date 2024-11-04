@@ -175,7 +175,6 @@ public class ReportUtils implements ExecutableClass {
 
         Rectangle pageSize = document.getPdfDocument().getPage(pageIndex).getPageSize();
         float width = pageSize.getWidth();
-        float height = pageSize.getHeight();
 
         Rectangle rectangle =
                 new Rectangle(footerInputBean.getRectangleWidth(), footerInputBean.getRectangleHeight());
@@ -369,7 +368,7 @@ public class ReportUtils implements ExecutableClass {
                                             String value,
                                             Table table) throws IOException {
 
-        boolean status = value.equalsIgnoreCase("SUCCESS");
+        boolean status = value.equalsIgnoreCase(SUCCESS);
 
         if (!status) {
             Table errorTable = setTable(buildTableInputBean());
@@ -384,11 +383,10 @@ public class ReportUtils implements ExecutableClass {
             errorCell.add(errorParagraph);
             errorCell.setBackgroundColor(hexaDecimalToRGB(ERROR_MESSAGE_DECIMAL));
             errorCell.setTextAlignment(TextAlignment.LEFT);
-            errorCell.setFontColor(WHITE);
+            errorCell.setFontColor(hexaDecimalToRGB(RED_HEXA_DECIMAL));
             errorCell.setWidth(100);
             errorCell.setBorder(Border.NO_BORDER);
             errorCell.setHeight(16);
-            errorCell.setBackgroundColor(hexaDecimalToRGB("d94c4c"));
             errorCell.setKeepTogether(true);
 
             errorTable.addCell(errorCell);

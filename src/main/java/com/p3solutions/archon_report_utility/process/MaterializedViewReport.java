@@ -1,15 +1,5 @@
 package com.p3solutions.archon_report_utility.process;
 
-import static com.p3solutions.archon_report_utility.constants.ColorConstants.*;
-import static com.p3solutions.archon_report_utility.constants.ColorConstants.GREY_SILVER_HEXA_DECIMAL;
-import static com.p3solutions.archon_report_utility.constants.FontConstants.HELVETICA;
-import static com.p3solutions.archon_report_utility.constants.FontConstants.HELVETICA_BOLD;
-import static com.p3solutions.archon_report_utility.constants.FontSizeConstants.HEADING_FONT_SIZE;
-import static com.p3solutions.archon_report_utility.constants.HeaderConstants.*;
-import static com.p3solutions.archon_report_utility.constants.JobSummaryConstants.*;
-import static com.p3solutions.archon_report_utility.utils.BeanUtils.*;
-import static com.p3solutions.archon_report_utility.utils.ContentUtils.*;
-
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.TextAlignment;
@@ -17,122 +7,137 @@ import com.itextpdf.layout.property.VerticalAlignment;
 import com.p3solutions.archon_report_utility.constants.ReportNameConstants;
 import com.p3solutions.archon_report_utility.reports.ExecutableClass;
 import com.p3solutions.archon_report_utility.utils.ReportUtils;
+
 import java.io.IOException;
+
+import static com.p3solutions.archon_report_utility.constants.ColorConstants.*;
+import static com.p3solutions.archon_report_utility.constants.FontConstants.HELVETICA;
+import static com.p3solutions.archon_report_utility.constants.FontConstants.HELVETICA_BOLD;
+import static com.p3solutions.archon_report_utility.constants.FontSizeConstants.DESC_FONT_SIZE;
+import static com.p3solutions.archon_report_utility.constants.FontSizeConstants.HEADING_FONT_SIZE;
+import static com.p3solutions.archon_report_utility.constants.HeaderConstants.*;
+import static com.p3solutions.archon_report_utility.constants.JobSummaryConstants.*;
+import static com.p3solutions.archon_report_utility.constants.report_constants.MaterializedViewConstants.LEFT_MARGIN;
+import static com.p3solutions.archon_report_utility.constants.report_constants.MaterializedViewConstants.POINT_COLUMN_WIDTH;
+import static com.p3solutions.archon_report_utility.utils.BeanUtils.*;
+import static com.p3solutions.archon_report_utility.utils.ContentUtils.*;
+
+/**
+ * Class responsible for generating the Materialized View Refresh Report.
+ * This report provides detailed information about the status and updates
+ * of materialized views in the system.
+ */
 
 public class MaterializedViewReport extends ReportUtils {
 
-  public MaterializedViewReport(String outputPath) {
-    super(outputPath);
-  }
+    public MaterializedViewReport(String outputPath) {
+        super(outputPath);
+    }
 
-  public void generateReport() throws IOException {
-
-    float[] pointColumnWidths = new float[] {450L, 450L, 450L};
-
-    ExecutableClass executableClass = new ReportUtils(outputPath);
-    executableClass.reportProcessInitiated();
-
-    executableClass.addEmptyLines(1);
-
-    Table table = executableClass.setTable(buildTableInputBean(), pointColumnWidths);
-
-    table.setMarginLeft(-18);
-
-    executableClass.setCellTemplateContent(buildColumnInputBean(), table, buildContentForColumn("Materialized View Refresh Report"));
-
-    executableClass.addTableIntoDocument(table);
-
-    executableClass.addEmptyLines(1);
-
-    executableClass.createDivider(buildDividerInputBean(800L, 0.5f, DIVIDER_LINE_HEXA_DECIMAL));
-
-    executableClass.createDivider(buildDividerInputBean(762L, 1, ASH_HEXA_DECIMAL));
-
-    executableClass.addEmptyLines(1);
-
-    executableClass.createHeaderText(
-        JOB_SUMMARY, BLACK_HEXA_DECIMAL, TextAlignment.LEFT, HEADING_FONT_SIZE, HELVETICA_BOLD);
-
-    executableClass.createHalfDivider(buildDividerInputBean(730L, 1, GREY_SILVER_HEXA_DECIMAL));
-
-    Table statusTable = executableClass.setTable(buildTableInputBean());
-
-    executableClass.createJobStatusTable(JOB_STATUS, FAILURE, statusTable);
-
-    Table errorTable = executableClass.setTable(buildTableInputBean());
-
-    executableClass.createJobStatusFailureTable(ERROR_MESSAGE_HEADER, FAILURE, errorTable);
+    public void generateReport() throws IOException {
 
 
-    executableClass.addEmptyLines(1);
+        ExecutableClass executableClass = new ReportUtils(outputPath);
+        executableClass.reportProcessInitiated();
 
-    Table summaryTable = executableClass.setTable(buildTableInputBean(), pointColumnWidths);
+        executableClass.addEmptyLines(1);
 
-    summaryTable.setMarginLeft(-18);
+        Table table = executableClass.setTable(buildTableInputBean(), POINT_COLUMN_WIDTH);
 
-    executableClass.setCellTemplateContent(
-        buildColumnInputBeanForJobSummary(), summaryTable, buildContentForJobColumn());
+        table.setMarginLeft(LEFT_MARGIN);
 
-    executableClass.addTableIntoDocument(summaryTable);
+        executableClass.setCellTemplateContent(buildColumnInputBean(),
+                table,
+                buildContentForColumn(ReportNameConstants.MATERIALIZED_VIEW_REFRESH_REPORT.getReportName()));
 
-    executableClass.createHalfDivider(buildDividerInputBean(570L, 1, GREY_SILVER_HEXA_DECIMAL));
+        executableClass.addTableIntoDocument(table);
 
-    executableClass.addEmptyLines(1);
+        executableClass.addEmptyLines(1);
 
-    executableClass.createHeaderText(
-        OBJECTIVE_HEADER,
-        BLACK_HEXA_DECIMAL,
-        TextAlignment.LEFT,
-        HEADING_FONT_SIZE,
-        HELVETICA_BOLD);
+        executableClass.createDivider(buildDividerInputBean(800L, 0.5f, DIVIDER_LINE_HEXA_DECIMAL));
 
-    String text =
-        """
-                The materialised view after being created once, needs to be refreshed at intervals to get real time data. Find the details of this job run below. This report gives details on materialised view updates.
-                """;
+        executableClass.createDivider(buildDividerInputBean(762L, 1, ASH_HEXA_DECIMAL));
 
-    Paragraph objectiveParagraph =
-        executableClass.createParagraph(
-            text,
-            hexaDecimalToRGB(SMOKY_BLACK_HEXA_DECIMAL),
-            TextAlignment.LEFT,
-            VerticalAlignment.TOP,
-            8,
-            HELVETICA);
+        executableClass.addEmptyLines(1);
 
-    objectiveParagraph.setMarginLeft(-18);
+        executableClass.createHeaderText(
+                JOB_SUMMARY, BLACK_HEXA_DECIMAL, TextAlignment.LEFT, HEADING_FONT_SIZE, HELVETICA_BOLD);
 
-    objectiveParagraph.setMarginRight(-18);
+        executableClass.createHalfDivider(buildDividerInputBean(730L, 1, GREY_SILVER_HEXA_DECIMAL));
 
-    executableClass.addParagraphIntoDocument(objectiveParagraph);
+        Table statusTable = executableClass.setTable(buildTableInputBean());
 
-    executableClass.createHalfDivider(buildDividerInputBean(508L, 1, GREY_SILVER_HEXA_DECIMAL));
+        executableClass.createJobStatusTable(JOB_STATUS, FAILURE, statusTable);
 
-    executableClass.addEmptyLines(1);
+        Table errorTable = executableClass.setTable(buildTableInputBean());
 
-    executableClass.createHeaderText(
-        ADDITIONAL_DETAILS,
-        BLACK_HEXA_DECIMAL,
-        TextAlignment.LEFT,
-        HEADING_FONT_SIZE,
-        HELVETICA_BOLD);
+        executableClass.createJobStatusFailureTable(ERROR_MESSAGE_HEADER, FAILURE, errorTable);
 
-    Table additionalTable = executableClass.setTable(buildTableInputBean(), pointColumnWidths);
+        executableClass.addEmptyLines(1);
 
-    additionalTable.setMarginLeft(-18);
+        Table summaryTable = executableClass.setTable(buildTableInputBean(), POINT_COLUMN_WIDTH);
 
-    executableClass.setCellTemplateContent(
-        buildAdditionalInputBean(), additionalTable, buildContentForAdditionalInputColumn());
+        summaryTable.setMarginLeft(LEFT_MARGIN);
 
-    executableClass.addTableIntoDocument(additionalTable);
+        executableClass.setCellTemplateContent(
+                buildColumnInputBeanForJobSummary(), summaryTable, buildContentForJobColumn());
 
-    executableClass.addHeader(
-        buildHeaderInputBean(ReportNameConstants.MATERIALIZED_VIEW_REFRESH_REPORT.getReportName()));
+        executableClass.addTableIntoDocument(summaryTable);
 
-    executableClass.setFooter(buildFooterInputBean());
+        executableClass.createHalfDivider(buildDividerInputBean(570L, 1, GREY_SILVER_HEXA_DECIMAL));
 
-    executableClass.createDivider(buildDividerInputBean(30L, 1, GREY_SILVER_HEXA_DECIMAL));
+        executableClass.addEmptyLines(1);
 
-    executableClass.documentClose();
-  }
+        executableClass.createHeaderText(
+                OBJECTIVE_HEADER,
+                BLACK_HEXA_DECIMAL,
+                TextAlignment.LEFT,
+                HEADING_FONT_SIZE,
+                HELVETICA_BOLD);
+
+
+        Paragraph objectiveParagraph =
+                executableClass.createParagraph(
+                        ReportNameConstants.MATERIALIZED_VIEW_REFRESH_REPORT.getDescription(),
+                        hexaDecimalToRGB(SMOKY_BLACK_HEXA_DECIMAL),
+                        TextAlignment.LEFT,
+                        VerticalAlignment.TOP,
+                        DESC_FONT_SIZE,
+                        HELVETICA);
+
+        objectiveParagraph.setMarginLeft(LEFT_MARGIN);
+
+        objectiveParagraph.setMarginRight(LEFT_MARGIN);
+
+        executableClass.addParagraphIntoDocument(objectiveParagraph);
+
+        executableClass.createHalfDivider(buildDividerInputBean(485L, 1, GREY_SILVER_HEXA_DECIMAL));
+
+        executableClass.addEmptyLines(1);
+
+        executableClass.createHeaderText(
+                ADDITIONAL_DETAILS,
+                BLACK_HEXA_DECIMAL,
+                TextAlignment.LEFT,
+                HEADING_FONT_SIZE,
+                HELVETICA_BOLD);
+
+        Table additionalTable = executableClass.setTable(buildTableInputBean(), POINT_COLUMN_WIDTH);
+
+        additionalTable.setMarginLeft(LEFT_MARGIN);
+
+        executableClass.setCellTemplateContent(
+                buildAdditionalInputBean(), additionalTable, buildContentForAdditionalInputColumn());
+
+        executableClass.addTableIntoDocument(additionalTable);
+
+        executableClass.addHeader(
+                buildHeaderInputBean(ReportNameConstants.MATERIALIZED_VIEW_REFRESH_REPORT.getReportName()));
+
+        executableClass.setFooter(buildFooterInputBean());
+
+        executableClass.createDivider(buildDividerInputBean(30L, 1, GREY_SILVER_HEXA_DECIMAL));
+
+        executableClass.documentClose();
+    }
 }
