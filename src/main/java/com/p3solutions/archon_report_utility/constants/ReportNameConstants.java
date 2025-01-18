@@ -17,7 +17,17 @@ public enum ReportNameConstants {
             """
                     This report shows the Storage optimisation achieved after the process run. Table data optimisation jobs identify scope of optimizing the way this data is stored using all the data and metadata information available for that table. This involves techniques like merging data sets , compressing data,cleaning up fragmented storage etc.
                     """,
-            "Table_Optimization.pdf");
+            "Table_Optimization.pdf"),
+
+    PURGE_REPORT("Purge Report",
+            """
+                    The Purge report use case involves identifying and removing outdated or irrelevant data from the system to maintain database efficiency and integrity
+                    """,
+            "Purge_Report.pdf"),
+        
+        ;
+
+
 
     private final String reportName;
     private final String description;

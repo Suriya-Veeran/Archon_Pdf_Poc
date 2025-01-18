@@ -3,6 +3,7 @@ package com.p3solutions.archon_report_utility;
 import com.p3solutions.archon_report_utility.constants.ReportNameConstants;
 import com.p3solutions.archon_report_utility.exception.ReportGenerationException;
 import com.p3solutions.archon_report_utility.process.MaterializedViewReport;
+import com.p3solutions.archon_report_utility.process.PurgeReport;
 import com.p3solutions.archon_report_utility.process.TableOptimizationReport;
 import com.p3solutions.archon_report_utility.yaml_utils.ConfigLoader;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,10 @@ public class Main {
         TableOptimizationReport tableOptimizationReport =
                 new TableOptimizationReport(filePath);
         tableOptimizationReport.generateReport();
+        break;
+      case PURGE_REPORT:
+        PurgeReport purgeReport = new PurgeReport(filePath);
+        purgeReport.generateReport();
         break;
       default:
           log.info("No Report  generation implemented for: {}", reportNameConstants);
