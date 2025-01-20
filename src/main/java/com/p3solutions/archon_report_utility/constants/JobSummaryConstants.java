@@ -35,4 +35,27 @@ public class JobSummaryConstants {
     public static final String JOB_STATUS = "Job Status : ";
 
     public static final String ERROR_MESSAGE_HEADER = "Error Message : ";
+
+    public static final String INGESTION_TYPE = "Ingestion Type\n";
+
+    public static final String INGESTION_MODE = "Ingestion Mode\n";
+
+    public static final String SOURCE_DATA_FILE_STORAGE_PROFILE_NAME = "Source Data File Storage Profile Name\n";
+
+    public static final String STORAGE_TYPE = "Storage Type\n";
+
+    public static final String BUCKET_NAME = "Bucket Name\n";
+
+    public static final String BUCKET_TYPE = "Bucket Type\n";
+
+    public static final String REGION = "Region\n";
+
+    public static final String SOURCE_PATH = "Source Path\n";
+
+    public static final String FILES_COUNT_PER_SET ="Files Count Per Set\n";
+
+
+
+
+
 }

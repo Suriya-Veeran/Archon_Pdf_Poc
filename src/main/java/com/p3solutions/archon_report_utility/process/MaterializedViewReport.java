@@ -80,7 +80,8 @@ public class MaterializedViewReport extends ReportUtils {
         summaryTable.setMarginLeft(LEFT_MARGIN);
 
         executableClass.setCellTemplateContent(
-                buildColumnInputBeanForJobSummary(), summaryTable, buildContentForJobColumn());
+                buildColumnInputBeanForJobSummary(), summaryTable,
+                buildContentForJobSummary(ReportNameConstants.MATERIALIZED_VIEW_REFRESH_REPORT));
 
         executableClass.addTableIntoDocument(summaryTable);
 

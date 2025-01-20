@@ -75,7 +75,7 @@ public class TableOptimizationReport extends ReportUtils {
 
         executableClass.setCellTemplateContent(buildColumnInputBeanForJobSummary(),
                 summaryTable,
-                buildContentForJobSummaryForTableData());
+                buildContentForJobSummary(ReportNameConstants.TABLE_OPTIMIZATION_REPORT));
 
         executableClass.addTableIntoDocument(summaryTable);
 

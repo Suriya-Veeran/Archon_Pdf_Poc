@@ -29,7 +29,7 @@ public class ContentUtils {
             case MATERIALIZED_VIEW_REFRESH_REPORT :
                 contentList.add(VIEW_ACTIVITY_SESSION_ID + 12333727);
                  break;
-            case TABLE_OPTIMIZATION_REPORT:
+            case TABLE_OPTIMIZATION_REPORT, INGESTION_REPORT:
                 contentList.add(JOB_NAME+"Test Job Name");
                 break;
             default:
@@ -41,9 +41,41 @@ public class ContentUtils {
 
     }
 
-    public static List<String> buildContentForJobColumn() {
+    public static List<String> buildContentForJobSummary(ReportNameConstants type){
         List<String> contentList = new ArrayList<>();
-        contentList.add(JOB_TYPE + "Materialized View Refresh Report");
+        switch (Objects.requireNonNull(type)) {
+            case MATERIALIZED_VIEW_REFRESH_REPORT:
+                contentList.add(JOB_TYPE + "Materialized View Refresh Report");
+                addCommonContent(contentList);
+                contentList.add(JOB_NAME + "Materialized View");
+                break;
+            case TABLE_OPTIMIZATION_REPORT:
+                contentList.add(JOB_INSTANCE_ID + "0123546474-5252");
+                contentList.add(JOB_TYPE + "Table Data Optimization");
+                addCommonContent(contentList);
+                contentList.add(TABLE_NAME + "Address Table");
+                break;
+            case INGESTION_REPORT:
+                addCommonContent(contentList);
+                contentList.add(TABLE_NAME+"Claim");
+                contentList.add(INGESTION_TYPE+"REST");
+                contentList.add(INGESTION_MODE+"Ingest Data");
+                contentList.add(SOURCE_DATA_FILE_STORAGE_PROFILE_NAME+"Local File System");
+                contentList.add(STORAGE_TYPE+"Default Storage");
+                contentList.add(BUCKET_NAME+"N/A");
+                contentList.add(BUCKET_TYPE+"N/A");
+                contentList.add(REGION+"N/A");
+                contentList.add(SOURCE_PATH+"/home/p3/IdeaProjects/Pdf_POC/src/main/resources");
+                contentList.add(FILES_COUNT_PER_SET+10);
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported content type: " + type);
+        }
+        return contentList;
+    }
+
+
+    private static void addCommonContent(List<String> contentList) {
         contentList.add(SCHEDULED_BY + SYS_ADMIN);
         contentList.add(SCHEDULED_TIME + new Date());
         contentList.add(START_TIME + new Date());
@@ -51,26 +83,9 @@ public class ContentUtils {
         contentList.add(TOTAL_TIME + new Date());
         contentList.add(APPLICATION_NAME + "App name");
         contentList.add(SCHEMA_NAME + "Schema Name");
-        contentList.add(JOB_NAME + "Materialized View");
-        return contentList;
-
     }
 
-    public static List<String> buildContentForJobSummaryForTableData(){
-        List<String> contentList = new ArrayList<>();
-        contentList.add(JOB_INSTANCE_ID+"0123546474-5252");
-        contentList.add(JOB_TYPE+"Table Data Optimization");
-        contentList.add(SCHEDULED_BY + SYS_ADMIN);
-        contentList.add(SCHEDULED_TIME + new Date());
-        contentList.add(START_TIME + new Date());
-        contentList.add(END_TIME + new Date());
-        contentList.add(TOTAL_TIME + new Date());
-        contentList.add(APPLICATION_NAME + "App name");
-        contentList.add(SCHEMA_NAME + "Schema Name");
-        contentList.add(TABLE_NAME+"Address");
-        return contentList;
 
-    }
     public static List<String> buildContentForAdditionalInputColumn() {
         List<String> contentList = new ArrayList<>();
         contentList.add(RECORDS_COUNT_BEFORE_REFRESH + 0);

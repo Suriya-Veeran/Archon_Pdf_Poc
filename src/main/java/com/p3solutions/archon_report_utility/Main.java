@@ -2,6 +2,7 @@ package com.p3solutions.archon_report_utility;
 
 import com.p3solutions.archon_report_utility.constants.ReportNameConstants;
 import com.p3solutions.archon_report_utility.exception.ReportGenerationException;
+import com.p3solutions.archon_report_utility.process.IngestionReport;
 import com.p3solutions.archon_report_utility.process.MaterializedViewReport;
 import com.p3solutions.archon_report_utility.process.PurgeReport;
 import com.p3solutions.archon_report_utility.process.TableOptimizationReport;
@@ -40,6 +41,10 @@ public class Main {
       case PURGE_REPORT:
         PurgeReport purgeReport = new PurgeReport(filePath);
         purgeReport.generateReport();
+        break;
+      case INGESTION_REPORT:
+        IngestionReport ingestionReport = new IngestionReport(filePath);
+        ingestionReport.generateReport();
         break;
       default:
           log.info("No Report  generation implemented for: {}", reportNameConstants);

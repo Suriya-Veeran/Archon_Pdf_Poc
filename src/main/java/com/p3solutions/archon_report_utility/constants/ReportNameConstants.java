@@ -24,7 +24,12 @@ public enum ReportNameConstants {
                     The Purge report use case involves identifying and removing outdated or irrelevant data from the system to maintain database efficiency and integrity
                     """,
             "Purge_Report.pdf"),
-        
+
+    INGESTION_REPORT("Ingestion Report",
+            """
+                    The ingestion report details the process of importing data from various sources into the system. It includes metrics on data volume, ingestion times, and success rates, as well as any errors or issues encountered. This report ensures that the data ingestion process is efficient, accurate, and aligned with organizational requirements, providing a foundation for reliable data analytics and operations.
+                    """,
+            "Ingestion_Report.pdf"),
         ;
 
 

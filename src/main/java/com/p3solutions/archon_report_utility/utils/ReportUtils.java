@@ -445,10 +445,11 @@ public class ReportUtils implements ExecutableClass {
 
     }
 
-    @Override
-    public void createPieChart() {
-        log.info("pie chart implementation");
-    }
+  @Override
+  public void createPieChart() throws IOException {
+    log.info("pie chart implementation");
+  }
+
 
     @Override
     public void setHeaderCell(Cell cell, Table table) {

@@ -26,5 +26,7 @@ public class HeaderConstants {
 
     public static final String ADDITIONAL_DETAILS = "Additional Details";
 
+    public static final String SESSION_METRICS = "Session Metrics\n";
+
 
 }
