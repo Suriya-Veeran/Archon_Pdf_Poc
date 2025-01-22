@@ -573,13 +573,13 @@ public class ReportUtils implements ExecutableClass {
         Map<String, String> parameters =
                 Map.of(
                         "chbr", "20",
-                        "chco", "BAE1FF,008FFF",
+                        "chco", "BAE1FF,008FFF,FF5733,DAF7A6,FFC300,581845",
                         "chdlp", "b",
-                        "chdl", "Succeeded|Failed",
+//                        "chdl", "Cat1|Cat2|Cat3|Cat4|Cat5|Cat6",
                         "chs", "700x300",
                         "cht", "p",
-                        "chd", "t:10,12",
-                        "chl", "10|12",
+                        "chd", "t:10,15,20,25,30,35",
+//                        "chl", "10|15|20|25|30|35",
                         "chtt", "Table");
 
         StringJoiner queryJoiner = new StringJoiner("&");
