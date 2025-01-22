@@ -19,6 +19,7 @@ import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.*;
+import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
@@ -31,13 +32,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 import static com.p3solutions.archon_report_utility.constants.ColorConstants.*;
 import static com.p3solutions.archon_report_utility.constants.CommonConstants.OF;
@@ -445,11 +451,170 @@ public class ReportUtils implements ExecutableClass {
 
     }
 
-  @Override
-  public void createPieChart() throws IOException {
-    log.info("pie chart implementation");
-  }
+    @Override
+    public Image createPieChart() throws IOException {
+        log.info("pie chart implementation");
+        File file = retrievePieChartFile();
+        return cropImageOld(file);
+    }
 
+    @Override
+    public Image createDoughNutChart() throws IOException{
+        log.info("dough nut implementation");
+        File file = retrieveDoughnutChartFile();
+        return cropImageOldForBarChart(file);
+    }
+
+    private File getCroppedImage(File file, String name, int x, int y, int width, int height) throws IOException {
+        BufferedImage img = ImageIO.read(file);
+        BufferedImage scaled = img.getSubimage(x, y, width, height);
+        File out = new File(name);
+        ImageIO.write(scaled, "png", out);
+        return out;
+    }
+
+    private Image cropImageOldForBarChart(File file) throws IOException {
+        File croppedImage = getCroppedImage(file, "final_session.png", 0, 10, 650, 340);
+        ImageData imageData = ImageDataFactory.create(croppedImage.getAbsolutePath());
+        Image image = new Image(imageData);
+        image.scaleToFit(400, 400);
+        return image;
+    }
+
+    private Image cropImageOld(File file) throws IOException {
+        File croppedImage = getCroppedImage(file, "final_session.png", 100, 0, 500, 300);
+        ImageData imageData = ImageDataFactory.create(croppedImage.getAbsolutePath());
+        Image image = new Image(imageData);
+        image.scaleToFit(400, 400);
+        return image;
+    }
+
+    private Image cropImage(String file) throws IOException {
+        try {
+            File inputFile = new File(file);
+            BufferedImage image = ImageIO.read(inputFile);
+
+            Graphics2D g = image.createGraphics();
+
+            g.setColor(java.awt.Color.WHITE);
+
+            int x = 600;
+            int y = 0;
+            int width = 100;
+            int height = 15;
+            g.fillRect(x, y, width, height);
+
+            g.dispose();
+
+            Path filePath = Paths.get("src/main/resources/Test/final_image.png");
+            ImageIO.write(image, "png", filePath.toFile());
+
+            log.info("Text removed successfully! Saved as 'final_image.png'");
+            ImageData imageData = ImageDataFactory.create(filePath.toFile().getAbsolutePath());
+            return new Image(imageData);
+        } catch (Exception e) {
+            throw new IOException("While crop getting exception" + e.getMessage());
+        }
+    }
+
+    private File retrieveDoughnutChartFile() throws IOException{
+        String uri = "https://image-charts.com/chart";
+
+        Map<String, String> parameters =
+                Map.of(
+                        "chbr", "20",
+                        "chco", "008FFF,264653,2A9D8F,E9C46A",
+                        "chdlp", "b",
+                        "chdl", "Structured data|Unstructured data|Compliance and Misc volume|Disposed volume|Suriya|Logu|Suri",
+                        "chs", "700x350",
+                        "cht", "pd",
+                        "chd", "t:80,5,10,5",
+//                        "chl", "347 GB|512 MB|1 GB|512 MB|1MB|2MB|3MB",
+                        "chtt", "Consumption",
+                        "chma", "30,30,30,30");
+
+        StringJoiner queryJoiner = new StringJoiner("&");
+        parameters.forEach((key, value) -> queryJoiner.add(key + "=" + value));
+
+        String query = queryJoiner.toString();
+        Path filePath = Paths.get("src/main/resources/pdf_report/dougnutchart.png");
+        URL url = new URL(uri + "?" + query);
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+        urlConnection.setRequestMethod("GET");
+        urlConnection.setRequestProperty("Accept", "application/json");
+        int responseCode = urlConnection.getResponseCode();
+        log.info("response code: {}", responseCode);
+        log.info("url: {}", url);
+
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            Files.createDirectories(filePath.getParent());
+
+            try (BufferedInputStream bis = new BufferedInputStream(urlConnection.getInputStream());
+                 FileOutputStream fos = new FileOutputStream(filePath.toFile())) {
+
+                byte[] buffer = new byte[1024];
+                int count;
+                while ((count = bis.read(buffer)) != -1) {
+                    fos.write(buffer, 0, count);
+                }
+            }
+            log.info("File downloaded successfully: {}", filePath.toAbsolutePath());
+            return filePath.toFile();
+        } else {
+            log.error("Failed to download file. HTTP response code: {}", responseCode);
+            throw new IOException("Failed to download file. HTTP response code: " + responseCode);
+        }
+    }
+
+    private File retrievePieChartFile() throws IOException {
+        String uri = "https://image-charts.com/chart";
+
+        Map<String, String> parameters =
+                Map.of(
+                        "chbr", "20",
+                        "chco", "BAE1FF,008FFF",
+                        "chdlp", "b",
+                        "chdl", "Succeeded|Failed",
+                        "chs", "700x300",
+                        "cht", "p",
+                        "chd", "t:10,12",
+                        "chl", "10|12",
+                        "chtt", "Table");
+
+        StringJoiner queryJoiner = new StringJoiner("&");
+        parameters.forEach((key, value) -> queryJoiner.add(key + "=" + value));
+
+        String query = queryJoiner.toString();
+        Path filePath = Paths.get("src/main/resources/Test/file.png");
+        URL url = new URL(uri + "?" + query);
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+        urlConnection.setRequestMethod("GET");
+        urlConnection.setRequestProperty("Accept", "application/json");
+        int responseCode = urlConnection.getResponseCode();
+        log.info("response code: {}", responseCode);
+        log.info("url: {}", url);
+
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            Files.createDirectories(filePath.getParent());
+
+            try (BufferedInputStream bis = new BufferedInputStream(urlConnection.getInputStream());
+                 FileOutputStream fos = new FileOutputStream(filePath.toFile())) {
+
+                byte[] buffer = new byte[1024];
+                int count;
+                while ((count = bis.read(buffer)) != -1) {
+                    fos.write(buffer, 0, count);
+                }
+            }
+            log.info("File downloaded successfully: {}", filePath.toAbsolutePath());
+            return filePath.toFile();
+        } else {
+            log.error("Failed to download file. HTTP response code: {}", responseCode);
+            throw new IOException("Failed to download file. HTTP response code: " + responseCode);
+        }
+    }
 
     @Override
     public void setHeaderCell(Cell cell, Table table) {

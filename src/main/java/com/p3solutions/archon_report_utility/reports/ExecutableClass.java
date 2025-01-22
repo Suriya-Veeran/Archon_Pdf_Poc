@@ -70,7 +70,9 @@ public interface ExecutableClass {
 
     void createJobStatusTable(String header, String value, Table statusTable) throws IOException;
 
-    void createPieChart() throws IOException;
+    Image createPieChart() throws IOException;
+
+    Image createDoughNutChart() throws IOException;
 
     Table setOptimizationStatistics(OptimizationStatisticsBean optimizationStatisticsBean, Table optimizationSettingTable);
 
