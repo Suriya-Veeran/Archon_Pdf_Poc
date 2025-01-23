@@ -1,6 +1,9 @@
 package test;
 
-import lombok.extern.slf4j.Slf4j;
+import static com.p3solutions.archon_report_utility.constants.FormatConstants.PNG_EXTENSION;
+import static com.p3solutions.archon_report_utility.constants.ImageChartsConstants.*;
+import static com.p3solutions.archon_report_utility.constants.SpecialCharacterConstants.*;
+import static com.p3solutions.archon_report_utility.constants.UriConstants.*;
 
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
@@ -13,8 +16,8 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static com.p3solutions.archon_report_utility.constants.ImageChartsConstants.*;
+import lombok.extern.slf4j.Slf4j;
+import report.table.enums.ChartType;
 
 @Slf4j
 public class ImageCharts {
@@ -38,10 +41,10 @@ public class ImageCharts {
 
     URL url = new URL(urlString);
     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-    urlConnection.setRequestMethod("GET");
-    urlConnection.setRequestProperty("Accept", "application/json");
+    urlConnection.setRequestMethod(GET_REQUEST);
+    urlConnection.setRequestProperty(ACCEPT_HEADER, APPLICATION_JSON);
 
-    Path filePath = Paths.get("src/main/resources/test/" + fileName + ".png");
+    Path filePath = Paths.get("src/main/resources/test/" + fileName + PNG_EXTENSION);
     int responseCode = urlConnection.getResponseCode();
     log.info("response code {}", responseCode);
     log.info("url {}", url);
@@ -72,42 +75,42 @@ public class ImageCharts {
     Map<String, String> params = new HashMap<>();
 
     params.put(CHS, "700x300"); // Chart size
-    params.put(COLOR, String.join(",", colors)); // Colors
+    params.put(COLOR, String.join(COMMA, colors)); // Colors
     params.put(
         CHD,
-        "t:"
+        VALUE_T
             + dataValues.stream()
                 .map(String::valueOf)
-                .collect(Collectors.joining(","))); // Data values
-    params.put(CHTT, "Chart Title"); // Default Title
-    params.put("chl", String.join("|", labels)); // labels
+                .collect(Collectors.joining(COMMA))); // Data values
+    params.put(CHART_TITLE, "Chart Title"); // Default Title
+    params.put(CHART_LABEL, String.join(PIPE, labels)); // labels
 
     if (!legends.isEmpty()) {
-      params.put("chdl", String.join("|", legends)); // Legends
+      params.put(CHART_LEGENDS, String.join(PIPE, legends)); // Legends
     }
 
     if (margins != null && !margins.isEmpty()) {
-      params.put("chma", margins); // Margins
+      params.put(CHART_MARGIN, margins); // Margins
     }
 
     switch (chartType) {
       case BAR_VERTICAL_CHART:
-        params.put("cht", ChartType.BAR_VERTICAL_CHART.getType()); // Bar chart type
-        params.put("chxt", "x,y"); // X and Y axis
-        params.put("chxl", "0:|" + String.join("|", labels)); // X Axis labels
-        params.put("chbh", "40,10,20"); // Bar settings
+        params.put(CHART_TYPE, ChartType.BAR_VERTICAL_CHART.getType()); // Bar chart type
+        params.put(CHART_XY_AXIS, "x,y"); // X and Y axis
+        params.put("chxl", "0:|" + String.join(PIPE, labels)); // X Axis labels
+        params.put(CHART_BAR_SETTINGS, "40,10,20"); // Bar settings
         break;
 
       case DOUGHNUT_CHART:
-        params.put("cht", ChartType.DOUGHNUT_CHART.getType()); // Doughnut chart type
-        params.put("chbr", "20"); // Border radius
-        params.put("chdlp", "r"); // Legend position
+        params.put(CHART_TYPE, ChartType.DOUGHNUT_CHART.getType()); // Doughnut chart type
+        params.put(CHART_BAR_RADIUS, "20"); // Border radius
+        params.put(CHART_LEGEND_POSITION, "r"); // Legend position
         break;
 
       case PIE_CHART:
-        params.put("cht", ChartType.PIE_CHART.getType()); // Pie chart type
-        params.put("chbr", "20"); // Border radius
-        params.put("chdlp", "b"); // Legend position
+        params.put(CHART_TYPE, ChartType.PIE_CHART.getType()); // Pie chart type
+        params.put(CHART_BAR_RADIUS, "20"); // Border radius
+        params.put(CHART_LEGEND_POSITION, "b"); // Legend position
         break;
 
       default:
@@ -120,9 +123,9 @@ public class ImageCharts {
   private static String buildUrl(Map<String, String> params) {
     String queryString =
         params.entrySet().stream()
-            .map(entry -> entry.getKey() + "=" + entry.getValue())
-            .collect(Collectors.joining("&"));
-    return BASE_URI + "?" + queryString;
+            .map(entry -> entry.getKey() + EQUAL + entry.getValue())
+            .collect(Collectors.joining(AND));
+    return BASE_URI + QUESTION_MARK + queryString;
   }
 
   public static void main(String[] args) throws IOException {
@@ -180,6 +183,6 @@ public class ImageCharts {
     for (int i = 0; i < size; i++) {
       marginParts.add(baseMargins);
     }
-    return String.join(",", marginParts);
+    return String.join(COMMA, marginParts);
   }
 }

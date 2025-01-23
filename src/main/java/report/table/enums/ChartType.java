@@ -1,4 +1,4 @@
-package test;
+package report.table.enums;
 
 import lombok.Getter;
 

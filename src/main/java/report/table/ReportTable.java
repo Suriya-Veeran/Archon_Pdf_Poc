@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.p3solutions.archon_report_utility.constants.ChartTableHeaderConstants.*;
 import static com.p3solutions.archon_report_utility.constants.ColorConstants.*;
 import static com.p3solutions.archon_report_utility.constants.FontConstants.HELVETICA;
 import static com.p3solutions.archon_report_utility.constants.FontConstants.HELVETICA_BOLD;
@@ -120,9 +121,9 @@ public class ReportTable extends ReportUtils {
 
     Table labelTable = new Table(new float[] {2, 10, 3});
 
-    labelTable.addCell(new Cell().add(new Paragraph("Color")));
-    labelTable.addCell(new Cell().add(new Paragraph("Label")));
-    labelTable.addCell(new Cell().add(new Paragraph("Value")));
+    labelTable.addCell(new Cell().add(new Paragraph(COLOR_HEADER)));
+    labelTable.addCell(new Cell().add(new Paragraph(LABEL)));
+    labelTable.addCell(new Cell().add(new Paragraph(VALUE)));
 
     List<RowData> dataList =
         Arrays.asList(
@@ -154,9 +155,9 @@ public class ReportTable extends ReportUtils {
 
     Table doughNutLabelTable = new Table(new float[] {2, 10, 3});
 
-    doughNutLabelTable.addCell(new Cell().add(new Paragraph("Color")));
-    doughNutLabelTable.addCell(new Cell().add(new Paragraph("Label")));
-    doughNutLabelTable.addCell(new Cell().add(new Paragraph("Value")));
+    doughNutLabelTable.addCell(new Cell().add(new Paragraph(COLOR_HEADER)));
+    doughNutLabelTable.addCell(new Cell().add(new Paragraph(LABEL)));
+    doughNutLabelTable.addCell(new Cell().add(new Paragraph(VALUE)));
 
     List<RowData> doughNutDataList =
         Arrays.asList(

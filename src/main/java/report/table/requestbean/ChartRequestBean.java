@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import report.table.RowData;
-import test.ChartType;
+import report.table.enums.ChartType;
 
 @Getter
 @Setter

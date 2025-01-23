@@ -1,5 +1,12 @@
 package report.table.utils;
 
+import static com.p3solutions.archon_report_utility.constants.ChartFontSizeConstants.*;
+import static com.p3solutions.archon_report_utility.constants.FileNameConstants.CROPPED;
+import static com.p3solutions.archon_report_utility.constants.FormatConstants.*;
+import static com.p3solutions.archon_report_utility.constants.ImageChartsConstants.*;
+import static com.p3solutions.archon_report_utility.constants.SpecialCharacterConstants.*;
+import static com.p3solutions.archon_report_utility.constants.UriConstants.*;
+
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.layout.element.Image;
@@ -15,16 +22,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
-
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import report.table.RowData;
 import report.table.requestbean.ChartRequestBean;
 import report.table.requestbean.ParametersBean;
-import test.ChartType;
-
-import static com.p3solutions.archon_report_utility.constants.ImageChartsConstants.*;
+import report.table.enums.ChartType;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -38,10 +42,10 @@ public class ChartCreation {
 
     URL url = new URL(urlString);
     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-    urlConnection.setRequestMethod("GET");
-    urlConnection.setRequestProperty("Accept", "application/json");
+    urlConnection.setRequestMethod(GET_REQUEST);
+    urlConnection.setRequestProperty(ACCEPT_HEADER, APPLICATION_JSON);
 
-    Path filePath = Paths.get("src/main/resources/test/" + chartRequestBean.getFileName() + ".png");
+    Path filePath = Paths.get("src/main/resources/test/" + chartRequestBean.getFileName() + PNG_EXTENSION);
     int responseCode = urlConnection.getResponseCode();
     log.info("Response code: {}", responseCode);
     log.info("Chart URL: {}", url);
@@ -65,7 +69,7 @@ public class ChartCreation {
     File croppedFile =
         cropImage(
             filePath.toFile(),
-            "cropped_" + chartRequestBean.getFileName() + ".png",
+                CROPPED + chartRequestBean.getFileName() + PNG_EXTENSION,
             chartRequestBean);
 
     return convertToImage(croppedFile);
@@ -85,46 +89,46 @@ public class ChartCreation {
     params.put(CHS, chartRequestBean.getParametersBean().getChartWidth()); // Chart size
     params.put(
         CHD,
-        "t:"
+        VALUE_T
             + dataValues.stream()
                 .map(String::valueOf)
-                .collect(Collectors.joining(","))); // Data values
-    params.put(CHTT, chartRequestBean.getParametersBean().getChartTitle()); // Default title
-    //    params.put("chl", String.join("|", labels)); // Labels
+                .collect(Collectors.joining(COMMA))); // Data values
+    params.put(CHART_TITLE, chartRequestBean.getParametersBean().getChartTitle()); // Default title
+//        params.put(CHART_LABEL, String.join(PIPE, labels)); // Labels
 
     if (!chartRequestBean.getLegends().isEmpty()) {
-      params.put("chdl", String.join("|", chartRequestBean.getLegends())); // Legends
+      params.put(CHART_LEGENDS, String.join(PIPE, chartRequestBean.getLegends())); // Legends
     }
 
     if (chartRequestBean.getMargins() != null && !chartRequestBean.getMargins().isEmpty()) {
-      params.put("chma", chartRequestBean.getMargins()); // Margins
+      params.put(CHART_MARGIN, chartRequestBean.getMargins()); // Margins
     }
 
     switch (chartRequestBean.getChartType()) {
       case BAR_VERTICAL_CHART -> {
-        params.put(COLOR, String.join("|", colors)); // Colors
-        params.put("cht", ChartType.BAR_VERTICAL_CHART.getType()); // Bar chart type
-        params.put("chxt", chartRequestBean.getParametersBean().getChartAxis()); // X and Y axis
-        //        params.put("chxl", "0:|" + String.join("|", labels)); // X Axis labels
+        params.put(COLOR, String.join(PIPE, colors)); // Colors
+        params.put(CHART_TYPE, ChartType.BAR_VERTICAL_CHART.getType()); // Bar chart type
+        params.put(CHART_XY_AXIS, chartRequestBean.getParametersBean().getChartAxis()); // X and Y axis
+        //        params.put(CHART_X_AXIS_LABEL, "0:|" + String.join(PIPE, labels)); // X Axis labels
         params.put(
-            "chbh", chartRequestBean.getParametersBean().getChartBarSettings()); // Bar settings
+            CHART_BAR_SETTINGS, chartRequestBean.getParametersBean().getChartBarSettings()); // Bar settings
       }
       case DOUGHNUT_CHART -> {
-        params.put(COLOR, String.join(",", colors)); // Colors
-        params.put("cht", ChartType.DOUGHNUT_CHART.getType()); // Doughnut chart type
+        params.put(COLOR, String.join(COMMA, colors)); // Colors
+        params.put(CHART_TYPE, ChartType.DOUGHNUT_CHART.getType()); // Doughnut chart type
         params.put(
-            "chbr", chartRequestBean.getParametersBean().getChartBorderRadius()); // Border radius
+            CHART_BAR_RADIUS, chartRequestBean.getParametersBean().getChartBorderRadius()); // Border radius
         params.put(
-            "chdlp",
+            CHART_LEGEND_POSITION,
             chartRequestBean.getParametersBean().getChartLegendPosition()); // Legend position
       }
       case PIE_CHART -> {
-        params.put(COLOR, String.join(",", colors)); // Colors
-        params.put("cht", ChartType.PIE_CHART.getType()); // Pie chart type
+        params.put(COLOR, String.join(COMMA, colors)); // Colors
+        params.put(CHART_TYPE, ChartType.PIE_CHART.getType()); // Pie chart type
         params.put(
-            "chbr", chartRequestBean.getParametersBean().getChartBorderRadius()); // Border radius
+            CHART_BAR_RADIUS, chartRequestBean.getParametersBean().getChartBorderRadius()); // Border radius
         params.put(
-            "chdlp",
+            CHART_LEGEND_POSITION,
             chartRequestBean.getParametersBean().getChartLegendPosition()); // Legend position
       }
       default ->
@@ -138,9 +142,9 @@ public class ChartCreation {
   private static String buildUrl(Map<String, String> params) {
     String queryString =
         params.entrySet().stream()
-            .map(entry -> entry.getKey() + "=" + entry.getValue())
-            .collect(Collectors.joining("&"));
-    return BASE_URI + "?" + queryString;
+            .map(entry -> entry.getKey() + EQUAL + entry.getValue())
+            .collect(Collectors.joining(AND));
+    return BASE_URI + QUESTION_MARK + queryString;
   }
 
   private static File cropImage(File file, String outputFileName, ChartRequestBean chartRequestBean)
@@ -153,7 +157,7 @@ public class ChartCreation {
             chartRequestBean.getCropWidth(),
             chartRequestBean.getCropHeight());
     File outputFile = new File("src/main/resources/test/"+outputFileName);
-    ImageIO.write(croppedImage, "png", outputFile);
+    ImageIO.write(croppedImage, PNG, outputFile);
     log.info("Cropped image saved to: {}", outputFile.getAbsolutePath());
     return outputFile;
   }
@@ -161,7 +165,7 @@ public class ChartCreation {
   private static Image convertToImage(File file) throws IOException {
     ImageData imageData = ImageDataFactory.create(file.getAbsolutePath());
     Image image = new Image(imageData);
-    image.scaleToFit(120, 120);
+    image.scaleToFit(SCALE_TO_FIT_WIDTH, SCALE_TO_FIT_HEIGHT);
     return image;
   }
 
@@ -175,11 +179,11 @@ public class ChartCreation {
     ParametersBean parametersBean =
         ParametersBean.builder()
             .chartTitle(chartType.getName())
-            .chartWidth("700x300")
+            .chartWidth(WIDTH_700_X_HEIGHT_300)
             .chartAxis("x,y")
             .chartBarSettings("40,10,20")
             .chartBorderRadius("8")
-            .chartLegendPosition("b")
+            .chartLegendPosition(CHART_LEGEND_POSITION_BOTTOM)
             .build();
 
     return switch (chartType) {
@@ -190,10 +194,10 @@ public class ChartCreation {
               .chartDataList(chartDataList)
               .legends(legends)
               .margins(margins)
-              .cropX(0)
-              .cropY(10)
-              .cropWidth(690)
-              .cropHeight(290)
+              .cropX(ZERO)
+              .cropY(TEN)
+              .cropWidth(SIX_HUNDRED_NINETY)
+              .cropHeight(TWO_HUNDRED_NINETY)
               .parametersBean(parametersBean)
               .build();
       case PIE_CHART ->
@@ -203,10 +207,10 @@ public class ChartCreation {
               .chartDataList(chartDataList)
               .legends(legends)
               .margins(margins)
-              .cropX(100)
-              .cropY(0)
+              .cropX(HUNDRED)
+              .cropY(ZERO)
               .cropWidth(500)
-              .cropHeight(300)
+              .cropHeight(THREE_HUNDRED)
               .parametersBean(parametersBean)
               .build();
       case DOUGHNUT_CHART ->
@@ -216,10 +220,10 @@ public class ChartCreation {
               .chartDataList(chartDataList)
               .legends(legends)
               .margins(margins)
-              .cropX(100)
-              .cropY(10)
-              .cropWidth(500)
-              .cropHeight(290)
+              .cropX(HUNDRED)
+              .cropY(TEN)
+              .cropWidth(FIVE_HUNDRED)
+              .cropHeight(TWO_HUNDRED_NINETY)
               .parametersBean(parametersBean)
               .build();
       default -> throw new IllegalArgumentException("Unsupported chart type: " + chartType);

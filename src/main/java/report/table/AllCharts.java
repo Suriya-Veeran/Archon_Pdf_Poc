@@ -15,16 +15,20 @@ import com.p3solutions.archon_report_utility.reports.ExecutableClass;
 import com.p3solutions.archon_report_utility.utils.ReportUtils;
 import report.table.requestbean.ChartRequestBean;
 import report.table.utils.ChartCreation;
-import test.ChartType;
+import report.table.enums.ChartType;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.p3solutions.archon_report_utility.constants.ChartFontSizeConstants.*;
+import static com.p3solutions.archon_report_utility.constants.ChartTableHeaderConstants.*;
 import static com.p3solutions.archon_report_utility.constants.ColorConstants.DIVIDER_LINE_HEXA_DECIMAL;
 import static com.p3solutions.archon_report_utility.constants.ColorConstants.GREY_SILVER_HEXA_DECIMAL;
 import static com.p3solutions.archon_report_utility.constants.FontConstants.HELVETICA_BOLD;
+import static com.p3solutions.archon_report_utility.constants.SpecialCharacterConstants.SPACE;
+import static com.p3solutions.archon_report_utility.constants.FileNameConstants.*;
 import static com.p3solutions.archon_report_utility.utils.BeanUtils.*;
 
 public class AllCharts extends ReportUtils {
@@ -80,21 +84,21 @@ public class AllCharts extends ReportUtils {
 
     labelTable.addCell(
         new Cell()
-            .add(new Paragraph("Color"))
+            .add(new Paragraph(COLOR_HEADER))
             //            .setBold()
             .setFontSize(4)
             .setBorder(Border.NO_BORDER)
             .setFont(PdfFontFactory.createFont(HELVETICA_BOLD, PdfEncodings.WINANSI)));
     labelTable.addCell(
         new Cell()
-            .add(new Paragraph("Label"))
+            .add(new Paragraph(LABEL))
             //            .setBold()
             .setFontSize(4)
             .setBorder(Border.NO_BORDER)
             .setFont(PdfFontFactory.createFont(HELVETICA_BOLD, PdfEncodings.WINANSI)));
     labelTable.addCell(
         new Cell()
-            .add(new Paragraph("Value"))
+            .add(new Paragraph(VALUE))
             //            .setBold()
             .setFontSize(4)
             .setBorder(Border.NO_BORDER)
@@ -117,55 +121,58 @@ public class AllCharts extends ReportUtils {
   }
 
   private static DeviceRgb hexToRgb(String hex) {
-    int r = Integer.parseInt(hex.substring(0, 2), 16);
-    int g = Integer.parseInt(hex.substring(2, 4), 16);
-    int b = Integer.parseInt(hex.substring(4, 6), 16);
+    int r = Integer.parseInt(hex.substring(ZERO, TWO), SIXTEEN);
+    int g = Integer.parseInt(hex.substring(TWO, FOUR), SIXTEEN);
+    int b = Integer.parseInt(hex.substring(FOUR, SIX), SIXTEEN);
     return new DeviceRgb(r, g, b);
   }
 
-  private static void addColorRowToTable(Table table, String colorHex, String label, String value) {
+  private static void addColorRowToTable(Table table,
+                                         String colorHex,
+                                         String label,
+                                         String value) {
     table.addCell(
         new Cell()
             .add(
-                new Paragraph("")
-                    //                    .setFontSize(4)
+                new Paragraph(SPACE)
                     .setBackgroundColor(hexToRgb(colorHex))
-                    .setWidth(4)
-                    .setHeight(4))
+                    .setWidth(FOUR)
+                    .setHeight(FOUR))
             .setBorder(Border.NO_BORDER));
 
     table.addCell(
         new Cell()
             .add(new Paragraph(label))
-            .setFontSize(5)
+            .setFontSize(FIVE)
             .setTextAlignment(TextAlignment.LEFT)
             .setVerticalAlignment(VerticalAlignment.MIDDLE)
-            .setPadding(2)
+            .setPadding(TWO)
             .setBorder(Border.NO_BORDER)
-            .setWordSpacing(1));
+            .setWordSpacing(ONE));
 
     table.addCell(
         new Cell()
             .add(new Paragraph(value))
-            .setFontSize(5)
+            .setFontSize(FIVE)
             .setTextAlignment(TextAlignment.CENTER)
             .setVerticalAlignment(VerticalAlignment.MIDDLE)
-            .setPadding(2)
+            .setPadding(TWO)
             .setBorder(Border.NO_BORDER)
-            .setWordSpacing(1));
+            .setWordSpacing(ONE));
   }
 
-  private static ChartRequestBean generateChartRequest(ChartType type, List<RowData> dataList) {
+  private static ChartRequestBean generateChartRequest(ChartType type,
+                                                       List<RowData> dataList) {
     return switch (type) {
       case BAR_VERTICAL_CHART ->
           ChartCreation.buildChartRequestBean(
-              "barchart", ChartType.BAR_VERTICAL_CHART, dataList, List.of(""), "");
+                  BAR_CHART, ChartType.BAR_VERTICAL_CHART, dataList, List.of(SPACE), SPACE);
       case PIE_CHART ->
           ChartCreation.buildChartRequestBean(
-              "pieChart", ChartType.PIE_CHART, dataList, List.of(""), "");
+                  PIE_CHART, ChartType.PIE_CHART, dataList, List.of(SPACE), SPACE);
       case DOUGHNUT_CHART ->
           ChartCreation.buildChartRequestBean(
-              "doughNutChart", ChartType.DOUGHNUT_CHART, dataList, List.of(""), "");
+                  DOUGH_NUT_CHART, ChartType.DOUGHNUT_CHART, dataList, List.of(SPACE), SPACE);
       default -> throw new IllegalArgumentException("Unsupported chart type: " + type);
     };
   }

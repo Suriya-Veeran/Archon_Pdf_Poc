@@ -49,9 +49,12 @@ import static com.p3solutions.archon_report_utility.constants.CommonConstants.OF
 import static com.p3solutions.archon_report_utility.constants.CommonConstants.PAGE;
 import static com.p3solutions.archon_report_utility.constants.FontConstants.HELVETICA;
 import static com.p3solutions.archon_report_utility.constants.FontConstants.HELVETICA_BOLD;
+import static com.p3solutions.archon_report_utility.constants.FormatConstants.PNG;
 import static com.p3solutions.archon_report_utility.constants.ImageChartsConstants.*;
 import static com.p3solutions.archon_report_utility.constants.JobSummaryConstants.ERROR_MESSAGE_HEADER;
 import static com.p3solutions.archon_report_utility.constants.JobSummaryConstants.SUCCESS;
+import static com.p3solutions.archon_report_utility.constants.SpecialCharacterConstants.*;
+import static com.p3solutions.archon_report_utility.constants.UriConstants.*;
 import static com.p3solutions.archon_report_utility.utils.BeanUtils.buildTableInputBean;
 
 public class ReportUtils implements ExecutableClass {
@@ -452,7 +455,7 @@ public class ReportUtils implements ExecutableClass {
     BufferedImage img = ImageIO.read(file);
     BufferedImage scaled = img.getSubimage(x, y, width, height);
     File out = new File(name);
-    ImageIO.write(scaled, "png", out);
+    ImageIO.write(scaled, PNG, out);
     return out;
   }
 
@@ -490,7 +493,7 @@ public class ReportUtils implements ExecutableClass {
       g.dispose();
 
       Path filePath = Paths.get("src/main/resources/Test/final_image.png");
-      ImageIO.write(image, "png", filePath.toFile());
+      ImageIO.write(image, PNG, filePath.toFile());
 
       log.info("Text removed successfully! Saved as 'final_image.png'");
       ImageData imageData = ImageDataFactory.create(filePath.toFile().getAbsolutePath());
@@ -505,28 +508,28 @@ public class ReportUtils implements ExecutableClass {
 
     Map<String, String> parameters =
         Map.of(
-            "chbr", "20",
+            CHART_BAR_RADIUS, "20",
             COLOR, "008FFF,264653,2A9D8F,E9C46A",
-            "chdlp", "b",
-            //                        "chdl", "Structured data|Unstructured data|Compliance and Misc
+            CHART_LEGEND_POSITION, "b",
+            //                        CHART_LEGENDS, "Structured data|Unstructured data|Compliance and Misc
             // volume|Disposed volume|Suriya|Logu|Suri",
             CHS, "700x350",
-            "cht", "pd",
+            CHART_TYPE, "pd",
             CHD, "t:80,5,10,5",
             //                        "chl", "347 GB|512 MB|1 GB|512 MB|1MB|2MB|3MB",
-            CHTT, "Consumption",
-            "chma", "30,30,30,30");
+                CHART_TITLE, "Consumption",
+            CHART_MARGIN, "30,30,30,30");
 
-    StringJoiner queryJoiner = new StringJoiner("&");
-    parameters.forEach((key, value) -> queryJoiner.add(key + "=" + value));
+    StringJoiner queryJoiner = new StringJoiner(AND);
+    parameters.forEach((key, value) -> queryJoiner.add(key + EQUAL + value));
 
     String query = queryJoiner.toString();
     Path filePath = Paths.get("src/main/resources/pdf_report/dougnutchart.png");
-    URL url = new URL(uri + "?" + query);
+    URL url = new URL(uri + QUESTION_MARK + query);
     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
-    urlConnection.setRequestMethod("GET");
-    urlConnection.setRequestProperty("Accept", "application/json");
+    urlConnection.setRequestMethod(GET_REQUEST);
+    urlConnection.setRequestProperty(ACCEPT_HEADER, APPLICATION_JSON);
     int responseCode = urlConnection.getResponseCode();
     log.info("response code: {}", responseCode);
     log.info("url: {}", url);
@@ -556,26 +559,26 @@ public class ReportUtils implements ExecutableClass {
 
     Map<String, String> parameters =
         Map.of(
-            "chbr", "20",
+            CHART_BAR_RADIUS, "20",
             COLOR, "BAE1FF,008FFF,FF5733,DAF7A6,FFC300,581845",
-            "chdlp", "b",
-            //                        "chdl", "Cat1|Cat2|Cat3|Cat4|Cat5|Cat6",
+            CHART_LEGEND_POSITION, "b",
+            //                        CHART_LEGENDS, "Cat1|Cat2|Cat3|Cat4|Cat5|Cat6",
             CHS, "700x300",
-            "cht", "p",
+            CHART_TYPE, "p",
             CHD, "t:10,15,20,25,30,35",
             //                        "chl", "10|15|20|25|30|35",
-            CHTT, "Table");
+                CHART_TITLE, "Table");
 
-    StringJoiner queryJoiner = new StringJoiner("&");
-    parameters.forEach((key, value) -> queryJoiner.add(key + "=" + value));
+    StringJoiner queryJoiner = new StringJoiner(AND);
+    parameters.forEach((key, value) -> queryJoiner.add(key + EQUAL + value));
 
     String query = queryJoiner.toString();
     Path filePath = Paths.get("src/main/resources/Test/file.png");
-    URL url = new URL(uri + "?" + query);
+    URL url = new URL(uri + QUESTION_MARK + query);
     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
-    urlConnection.setRequestMethod("GET");
-    urlConnection.setRequestProperty("Accept", "application/json");
+    urlConnection.setRequestMethod(GET_REQUEST);
+    urlConnection.setRequestProperty(ACCEPT_HEADER, APPLICATION_JSON);
     int responseCode = urlConnection.getResponseCode();
     log.info("response code: {}", responseCode);
     log.info("url: {}", url);
@@ -621,7 +624,7 @@ public class ReportUtils implements ExecutableClass {
     LSBSteganography.encodeMessage(coverImage, message);
 
     String modifiedImagePath = location + "/modified-cover-image.png";
-    ImageIO.write(coverImage, "png", new File(modifiedImagePath));
+    ImageIO.write(coverImage, PNG, new File(modifiedImagePath));
 
     ImageData imageData = ImageDataFactory.create(modifiedImagePath);
     Image image = new Image(imageData);
