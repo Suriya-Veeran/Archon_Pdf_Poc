@@ -9,7 +9,7 @@ import lombok.Setter;
 @Builder
 public class DividerInputBean {
 
-    private String hexaDecimal;
+    private String hexDecimal;
 
     private float lineWidth;
 

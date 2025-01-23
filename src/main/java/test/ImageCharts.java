@@ -14,11 +14,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static com.p3solutions.archon_report_utility.constants.ImageChartsConstants.*;
 
 @Slf4j
 public class ImageCharts {
-
-  private static final String BASE_URI = "https://image-charts.com/chart";
 
   private static void generateChart(
       String fileName,
@@ -72,15 +71,15 @@ public class ImageCharts {
       String margins) {
     Map<String, String> params = new HashMap<>();
 
-    params.put("chs", "700x300"); // Chart size
-    params.put("chco", String.join(",", colors)); // Colors
+    params.put(CHS, "700x300"); // Chart size
+    params.put(COLOR, String.join(",", colors)); // Colors
     params.put(
-        "chd",
+        CHD,
         "t:"
             + dataValues.stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(","))); // Data values
-    params.put("chtt", "Chart Title"); // Default Title
+    params.put(CHTT, "Chart Title"); // Default Title
     params.put("chl", String.join("|", labels)); // labels
 
     if (!legends.isEmpty()) {
@@ -118,35 +117,6 @@ public class ImageCharts {
     return params;
   }
 
-  //    private static Map<String, String> buildChartParams(ChartType chartType,
-  //                                                        List<Integer> dataValues,
-  //                                                        List<String> labels,
-  //                                                        List<String> colors,
-  //                                                        List<String> legends,
-  //                                                        String margins) {
-  //
-  //        Map<String, String> params = new HashMap<>();
-  //
-  //        params.put("chs", "600x300");
-  //        params.put("chd", "t:" +
-  // dataValues.stream().map(String::valueOf).collect(Collectors.joining(",")));
-  //        params.put("chl", String.join("|", labels));
-  //        params.put("chco", String.join(",", colors));
-  //
-  //        if (!legends.isEmpty()) {
-  //            params.put("chdl", String.join("|", legends));
-  //        }
-  //
-  //        if (margins != null && !margins.isEmpty()) {
-  //            params.put("chma", margins);
-  //        }
-  //
-  //
-  //        params.put("cht", chartType.getType());
-  //
-  //        return params;
-  //    }
-
   private static String buildUrl(Map<String, String> params) {
     String queryString =
         params.entrySet().stream()
@@ -156,24 +126,17 @@ public class ImageCharts {
   }
 
   public static void main(String[] args) throws IOException {
-//    List<ChartData> chartDataList =
-//        Arrays.asList(
-//            new ChartData(10, "Label1", "008FFF"),
-//            new ChartData(20, "Label2", "264653"),
-//            new ChartData(30, "Label3", "2A9D8F"),
-//            new ChartData(40, "Label4", "E9C46A"),
-//            new ChartData(50, "Label5", "E9C46A"));
-//
-//    List<String> legends = Arrays.asList("Series1", "Series2", "Series3", "Series4", "Series5");
-//
-//    String margins = "10,20,10,20";
+    List<ChartData> chartDataList =
+        Arrays.asList(
+            new ChartData(10, "Label1", "008FFF"),
+            new ChartData(20, "Label2", "264653"),
+            new ChartData(30, "Label3", "2A9D8F"),
+            new ChartData(40, "Label4", "E9C46A"),
+            new ChartData(50, "Label5", "E9C46A"));
 
+    List<String> legends = Arrays.asList("Series1", "Series2", "Series3", "Series4", "Series5");
 
-    List<ChartData> chartDataList = createChartData(20);
-
-    List<String> legends = createLegends(20);
-
-    String margins = createMargins(20);
+    String margins = "10,20,10,20";
 
     generateChart(
         "barchart_with_legend_and_margin",
@@ -193,13 +156,12 @@ public class ImageCharts {
         margins);
   }
 
-
   public static List<ChartData> createChartData(int size) {
     List<ChartData> chartDataList = new ArrayList<>();
     Random random = new Random();
 
     for (int i = 1; i <= size; i++) {
-//      int value = i * 1;
+      //      int value = i * 1;
       String label = "Label" + i;
       String color = String.format("%06X", random.nextInt(0xFFFFFF + 1));
 
@@ -209,9 +171,7 @@ public class ImageCharts {
   }
 
   public static List<String> createLegends(int size) {
-    return IntStream.rangeClosed(1, size)
-            .mapToObj(i -> "Series" + i)
-            .toList();
+    return IntStream.rangeClosed(1, size).mapToObj(i -> "Series" + i).toList();
   }
 
   public static String createMargins(int size) {

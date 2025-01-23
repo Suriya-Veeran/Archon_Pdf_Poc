@@ -150,6 +150,37 @@ public class ReportTable extends ReportUtils {
     layoutTable.setHorizontalAlignment(HorizontalAlignment.LEFT);
     layoutTable.setFixedPosition(36, 700, 523);
 
+    Image doughNutChart = executableClass.createDoughNutChart();
+
+    Table doughNutLabelTable = new Table(new float[] {2, 10, 3});
+
+    doughNutLabelTable.addCell(new Cell().add(new Paragraph("Color")));
+    doughNutLabelTable.addCell(new Cell().add(new Paragraph("Label")));
+    doughNutLabelTable.addCell(new Cell().add(new Paragraph("Value")));
+
+    List<RowData> doughNutDataList =
+        Arrays.asList(
+            new RowData("008FFF", "Category A", "5"),
+            new RowData("264653", "Category B", "10"),
+            new RowData("2A9D8F", "Category C", "15"),
+            new RowData("E9C46A", "Category D", "20"));
+
+    for (RowData row : doughNutDataList) {
+      addColorRowToTable(doughNutLabelTable, row.colorHex, row.label, row.value);
+    }
+
+    Table doughNutLayoutTable = new Table(new float[] {1, 5});
+
+    Cell doughNutChartCell =
+        new Cell().add(doughNutChart).setBorder(Border.NO_BORDER).setPaddingLeft(-108);
+
+    doughNutLayoutTable.addCell(doughNutChartCell);
+    doughNutLayoutTable.addCell(new Cell().add(doughNutLabelTable).setBorder(Border.NO_BORDER));
+
+    executableClass.addParagraphIntoDocument(new Paragraph().add(doughNutLayoutTable));
+
+    doughNutLayoutTable.setHorizontalAlignment(HorizontalAlignment.LEFT);
+
     executableClass.addHeader(
         buildHeaderInputBean(ReportNameConstants.INGESTION_REPORT.getReportName()));
 

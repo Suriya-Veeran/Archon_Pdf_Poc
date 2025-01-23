@@ -97,7 +97,7 @@ public class BeanUtils {
         return DividerInputBean
                 .builder()
                 .pageNumber(1)
-                .hexaDecimal(hexaDecimal)
+                .hexDecimal(hexaDecimal)
                 .height(height)
                 .lineWidth(lineWidth)
                 .build();

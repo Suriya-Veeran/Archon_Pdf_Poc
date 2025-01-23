@@ -1,6 +1,7 @@
 package com.p3solutions.archon_report_utility.reports;
 
 import com.itextpdf.kernel.colors.Color;
+import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
@@ -11,6 +12,7 @@ import com.itextpdf.layout.property.VerticalAlignment;
 import com.p3solutions.archon_report_utility.beans.input_bean.OptimizationStatisticsBean;
 import com.p3solutions.archon_report_utility.beans.utils.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -83,5 +85,11 @@ public interface ExecutableClass {
     void setHiddenWatermarkImage(String location, String imagePath, String message ) throws IOException;
 
     void createJobStatusFailureTable(String errorMessageHeader, String failure, Table errorTable) throws IOException;
+
+    PdfDocument getCurrentPdfDocument();
+
+    void deleteTempFiles(File tempFilePath);
+
+
 
 }
