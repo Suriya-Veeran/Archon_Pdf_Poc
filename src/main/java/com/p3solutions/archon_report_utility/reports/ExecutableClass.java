@@ -90,6 +90,8 @@ public interface ExecutableClass {
 
     void deleteTempFiles(File tempFilePath);
 
+    void addImageToDocument(Image image);
+
 
 
 }

@@ -1,35 +1,30 @@
 package report.table;
 
+import static com.p3solutions.archon_report_utility.constants.ChartTableHeaderConstants.*;
+import static com.p3solutions.archon_report_utility.constants.ColorConstants.DIVIDER_LINE_HEXA_DECIMAL;
+import static com.p3solutions.archon_report_utility.constants.ColorConstants.GREY_SILVER_HEXA_DECIMAL;
+import static com.p3solutions.archon_report_utility.constants.FileNameConstants.*;
+import static com.p3solutions.archon_report_utility.constants.FontConstants.HELVETICA_BOLD;
+import static com.p3solutions.archon_report_utility.utils.BeanUtils.*;
+import static utility.AddColorRowToTable.addColorRowToTable;
+import static utility.ImageChartUtils.generateChartRequest;
+
 import com.itextpdf.io.font.PdfEncodings;
-import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.property.TextAlignment;
-import com.itextpdf.layout.property.VerticalAlignment;
 import com.p3solutions.archon_report_utility.constants.ReportNameConstants;
 import com.p3solutions.archon_report_utility.reports.ExecutableClass;
 import com.p3solutions.archon_report_utility.utils.ReportUtils;
-import report.table.requestbean.ChartRequestBean;
-import report.table.utils.ChartCreation;
-import report.table.enums.ChartType;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.p3solutions.archon_report_utility.constants.ChartFontSizeConstants.*;
-import static com.p3solutions.archon_report_utility.constants.ChartTableHeaderConstants.*;
-import static com.p3solutions.archon_report_utility.constants.ColorConstants.DIVIDER_LINE_HEXA_DECIMAL;
-import static com.p3solutions.archon_report_utility.constants.ColorConstants.GREY_SILVER_HEXA_DECIMAL;
-import static com.p3solutions.archon_report_utility.constants.FontConstants.HELVETICA_BOLD;
-import static com.p3solutions.archon_report_utility.constants.SpecialCharacterConstants.SPACE;
-import static com.p3solutions.archon_report_utility.constants.FileNameConstants.*;
-import static com.p3solutions.archon_report_utility.utils.BeanUtils.*;
+import report.table.enums.ChartType;
+import report.table.utils.ChartCreation;
 
 public class AllCharts extends ReportUtils {
 
@@ -39,7 +34,7 @@ public class AllCharts extends ReportUtils {
 
   public static void main(String[] args) throws IOException {
     ExecutableClass executableClass =
-        new ReportUtils("/home/p3/IdeaProjects/Pdf_POC/src/main/resources/sampleTest/Sample.pdf");
+        new ReportUtils("/home/p3/IdeaProjects/Pdf_POC/src/main/resources/sampleTest/ImageCharts.pdf");
     executableClass.reportProcessInitiated();
 
     executableClass.addEmptyLines(1);
@@ -85,21 +80,18 @@ public class AllCharts extends ReportUtils {
     labelTable.addCell(
         new Cell()
             .add(new Paragraph(COLOR_HEADER))
-            //            .setBold()
             .setFontSize(4)
             .setBorder(Border.NO_BORDER)
             .setFont(PdfFontFactory.createFont(HELVETICA_BOLD, PdfEncodings.WINANSI)));
     labelTable.addCell(
         new Cell()
             .add(new Paragraph(LABEL))
-            //            .setBold()
             .setFontSize(4)
             .setBorder(Border.NO_BORDER)
             .setFont(PdfFontFactory.createFont(HELVETICA_BOLD, PdfEncodings.WINANSI)));
     labelTable.addCell(
         new Cell()
             .add(new Paragraph(VALUE))
-            //            .setBold()
             .setFontSize(4)
             .setBorder(Border.NO_BORDER)
             .setFont(PdfFontFactory.createFont(HELVETICA_BOLD, PdfEncodings.WINANSI)));
@@ -118,62 +110,5 @@ public class AllCharts extends ReportUtils {
     executableClass.addTableIntoDocument(layoutTable);
 
     executableClass.deleteTempFiles(new File("src/main/resources/test"));
-  }
-
-  private static DeviceRgb hexToRgb(String hex) {
-    int r = Integer.parseInt(hex.substring(ZERO, TWO), SIXTEEN);
-    int g = Integer.parseInt(hex.substring(TWO, FOUR), SIXTEEN);
-    int b = Integer.parseInt(hex.substring(FOUR, SIX), SIXTEEN);
-    return new DeviceRgb(r, g, b);
-  }
-
-  private static void addColorRowToTable(Table table,
-                                         String colorHex,
-                                         String label,
-                                         String value) {
-    table.addCell(
-        new Cell()
-            .add(
-                new Paragraph(SPACE)
-                    .setBackgroundColor(hexToRgb(colorHex))
-                    .setWidth(FOUR)
-                    .setHeight(FOUR))
-            .setBorder(Border.NO_BORDER));
-
-    table.addCell(
-        new Cell()
-            .add(new Paragraph(label))
-            .setFontSize(FIVE)
-            .setTextAlignment(TextAlignment.LEFT)
-            .setVerticalAlignment(VerticalAlignment.MIDDLE)
-            .setPadding(TWO)
-            .setBorder(Border.NO_BORDER)
-            .setWordSpacing(ONE));
-
-    table.addCell(
-        new Cell()
-            .add(new Paragraph(value))
-            .setFontSize(FIVE)
-            .setTextAlignment(TextAlignment.CENTER)
-            .setVerticalAlignment(VerticalAlignment.MIDDLE)
-            .setPadding(TWO)
-            .setBorder(Border.NO_BORDER)
-            .setWordSpacing(ONE));
-  }
-
-  private static ChartRequestBean generateChartRequest(ChartType type,
-                                                       List<RowData> dataList) {
-    return switch (type) {
-      case BAR_VERTICAL_CHART ->
-          ChartCreation.buildChartRequestBean(
-                  BAR_CHART, ChartType.BAR_VERTICAL_CHART, dataList, List.of(SPACE), SPACE);
-      case PIE_CHART ->
-          ChartCreation.buildChartRequestBean(
-                  PIE_CHART, ChartType.PIE_CHART, dataList, List.of(SPACE), SPACE);
-      case DOUGHNUT_CHART ->
-          ChartCreation.buildChartRequestBean(
-                  DOUGH_NUT_CHART, ChartType.DOUGHNUT_CHART, dataList, List.of(SPACE), SPACE);
-      default -> throw new IllegalArgumentException("Unsupported chart type: " + type);
-    };
   }
 }

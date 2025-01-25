@@ -28,6 +28,7 @@ import static com.p3solutions.archon_report_utility.constants.report_constants.T
 import static com.p3solutions.archon_report_utility.utils.BeanUtils.*;
 import static com.p3solutions.archon_report_utility.utils.ContentUtils.buildContentForColumn;
 import static com.p3solutions.archon_report_utility.utils.ContentUtils.buildContentForJobSummary;
+import static utility.AddColorRowToTable.addColorRowToTable;
 
 public class ReportTable extends ReportUtils {
 
@@ -190,41 +191,5 @@ public class ReportTable extends ReportUtils {
     executableClass.createDivider(buildDividerInputBean(30L, 1, GREY_SILVER_HEXA_DECIMAL));
 
     executableClass.documentClose();
-  }
-
-  private static DeviceRgb hexToRgb(String hex) {
-    int r = Integer.parseInt(hex.substring(0, 2), 16);
-    int g = Integer.parseInt(hex.substring(2, 4), 16);
-    int b = Integer.parseInt(hex.substring(4, 6), 16);
-    return new DeviceRgb(r, g, b);
-  }
-
-  private static void addColorRowToTable(Table table, String colorHex, String label, String value) {
-    table.addCell(
-        new Cell()
-            .add(
-                new Paragraph("")
-                    .setFontSize(8)
-                    .setBackgroundColor(hexToRgb(colorHex))
-                    .setWidth(20)
-                    .setHeight(20)));
-
-    table.addCell(
-        new Cell()
-            .add(new Paragraph(label))
-            .setFontSize(8)
-            .setTextAlignment(TextAlignment.LEFT)
-            .setVerticalAlignment(VerticalAlignment.MIDDLE)
-            .setPadding(2)
-            .setWordSpacing(1));
-
-    table.addCell(
-        new Cell()
-            .add(new Paragraph(value))
-            .setFontSize(8)
-            .setTextAlignment(TextAlignment.CENTER)
-            .setVerticalAlignment(VerticalAlignment.MIDDLE)
-            .setPadding(2)
-            .setWordSpacing(1));
   }
 }

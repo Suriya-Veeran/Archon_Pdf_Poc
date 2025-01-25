@@ -866,6 +866,11 @@ public class ReportUtils implements ExecutableClass {
     log.info(message);
   }
 
+  @Override
+  public void addImageToDocument(Image image) {
+      document.add(image);
+  }
+
   public void deleteTempFilesUsingPath(Path tempFilePath) throws IOException {
     if (Files.isDirectory(tempFilePath)) {
       try (Stream<Path> paths = Files.walk(tempFilePath).sorted(Comparator.reverseOrder())) {

@@ -31,6 +31,22 @@ dependencies {
     // https://mvnrepository.com/artifact/org.yaml/snakeyaml
     implementation group: 'org.yaml', name: 'snakeyaml', version: '2.3'
 
+    // https://mvnrepository.com/artifact/org.jfree/jfreechart
+    implementation 'org.jfree:jfreechart:1.5.5'
+
+    implementation 'org.seleniumhq.selenium:selenium-java:4.12.0'
+    implementation 'org.seleniumhq.selenium:htmlunit-driver:2.60.0'
+
+    // Apache Commons IO for file operations (optional)
+    implementation 'commons-io:commons-io:2.11.0'
+
+    implementation 'org.seleniumhq.selenium:selenium-chrome-driver:4.12.0'
+
+    // JSON processing (if needed)
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+
+    implementation 'io.github.bonigarcia:webdrivermanager:5.7.0'
+
 }
 
 test {
