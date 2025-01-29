@@ -1,5 +1,6 @@
 package com.p3solutions.archon_report_utility.reports;
 
+import apache_echarts.beans.html_beans.HtmlCreationInfoBean;
 import com.itextpdf.kernel.colors.Color;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.layout.borders.Border;
@@ -92,8 +93,9 @@ public interface ExecutableClass {
 
     void addImageToDocument(Image image);
 
-    Image createChart
-            (String chartType, String chartName) throws IOException;
+    Image createChart(String chartType) throws IOException;
 
     void deleteTempImages(String path);
+
+    Image createChartUsingBean(String chartType, HtmlCreationInfoBean htmlCreationInfoBean);
 }

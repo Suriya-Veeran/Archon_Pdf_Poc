@@ -29,7 +29,8 @@ public class ContentUtils {
             case MATERIALIZED_VIEW_REFRESH_REPORT :
                 contentList.add(VIEW_ACTIVITY_SESSION_ID + 12333727);
                  break;
-            case TABLE_OPTIMIZATION_REPORT, INGESTION_REPORT, LICENSE_VOLUME_STATISTICS_REPORT:
+            case TABLE_OPTIMIZATION_REPORT, INGESTION_REPORT, LICENSE_VOLUME_STATISTICS_REPORT,
+                 SOURCE_TO_VALIDATION_REPORT:
                 contentList.add(JOB_NAME+"Test Job Name");
                 break;
             default:
@@ -59,16 +60,7 @@ public class ContentUtils {
                 break;
             case INGESTION_REPORT:
                 addCommonContent(contentList, startTime, scheduledTime);
-                contentList.add(TABLE_NAME+"Claim");
-                contentList.add(INGESTION_TYPE+"REST");
-                contentList.add(INGESTION_MODE+"Ingest Data");
-                contentList.add(SOURCE_DATA_FILE_STORAGE_PROFILE_NAME+"Local File System");
-                contentList.add(STORAGE_TYPE+"Default Storage");
-                contentList.add(BUCKET_NAME+"N/A");
-                contentList.add(BUCKET_TYPE+"N/A");
-                contentList.add(REGION+"N/A");
-                contentList.add(SOURCE_PATH+"/home/p3/IdeaProjects/Pdf_POC/src/main/resources");
-                contentList.add(FILES_COUNT_PER_SET+10);
+                addCommonContentForIngestionAndSourceValidation(contentList);
                 break;
             case LICENSE_VOLUME_STATISTICS_REPORT:
                 contentList.add(SCHEDULED_BY + SYS_ADMIN);
@@ -77,10 +69,28 @@ public class ContentUtils {
                 contentList.add(END_TIME + new Date());
                 contentList.add(TOTAL_TIME + totalTimeCalculation(startTime, new Date()));
             break;
+            case SOURCE_TO_VALIDATION_REPORT:
+                contentList.add(INGESTION_SESSION_ID + "Materialized View Refresh Report");
+                addCommonContent(contentList, startTime, scheduledTime);
+                addCommonContentForIngestionAndSourceValidation(contentList);
+            break;
             default:
                 throw new IllegalArgumentException("Unsupported content type: " + type);
         }
         return contentList;
+    }
+
+    private static void addCommonContentForIngestionAndSourceValidation(List<String> contentList) {
+        contentList.add(TABLE_NAME+"Claim");
+        contentList.add(INGESTION_TYPE+"REST");
+        contentList.add(INGESTION_MODE+"Ingest Data");
+        contentList.add(SOURCE_DATA_FILE_STORAGE_PROFILE_NAME+"Local File System");
+        contentList.add(STORAGE_TYPE+"Default Storage");
+        contentList.add(BUCKET_NAME+"N/A");
+        contentList.add(BUCKET_TYPE+"N/A");
+        contentList.add(REGION+"N/A");
+        contentList.add(SOURCE_PATH+"src/main/resources");
+        contentList.add(FILES_COUNT_PER_SET+10);
     }
 
 

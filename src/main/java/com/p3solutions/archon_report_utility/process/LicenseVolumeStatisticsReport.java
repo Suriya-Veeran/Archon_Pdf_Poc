@@ -1,5 +1,8 @@
 package com.p3solutions.archon_report_utility.process;
 
+import apache_echarts.beans.chart.*;
+import apache_echarts.beans.html_beans.HtmlCreationInfoBean;
+import apache_echarts.enums.FormatTypes;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
@@ -12,6 +15,8 @@ import com.p3solutions.archon_report_utility.reports.ExecutableClass;
 import com.p3solutions.archon_report_utility.utils.ReportUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.p3solutions.archon_report_utility.constants.ColorConstants.*;
 import static com.p3solutions.archon_report_utility.constants.FontConstants.HELVETICA;
@@ -25,6 +30,7 @@ import static com.p3solutions.archon_report_utility.utils.BeanUtils.*;
 import static com.p3solutions.archon_report_utility.utils.BeanUtils.buildDividerInputBean;
 import static com.p3solutions.archon_report_utility.utils.ContentUtils.buildContentForColumn;
 import static com.p3solutions.archon_report_utility.utils.ContentUtils.buildContentForJobSummary;
+import static utility.ChartBeanUtils.*;
 
 public class LicenseVolumeStatisticsReport extends ReportUtils {
   public LicenseVolumeStatisticsReport(String outputPath) {
@@ -108,10 +114,26 @@ public class LicenseVolumeStatisticsReport extends ReportUtils {
 
     executableClass.addEmptyLines(1);
 
-    Image doughNutImage = executableClass.createChart("doughnut", "Table");
+    List<String> pieData = new ArrayList<>();
+    pieData.add("2 GB");
+    pieData.add("350 MB");
+
+    List<DataInfoBean> dataInfoBeanList = new ArrayList<>();
+    dataInfoBeanList.add(buildDataInfoBean("2 GB", 2, FormatTypes.GB, "ff0000"));
+    dataInfoBeanList.add(buildDataInfoBean("350 MB", 650, FormatTypes.MB, "00ff00"));
+
+    HtmlCreationInfoBean htmlCreationInfoBean =
+        createChartConfig(
+            createChartBasicInfo("500px", "400px", "pie"),
+            createTitleConfig("Volume", 16, "Arial", "bold", "#333"),
+            createLegendInfoBean(pieData),
+            createSeriesInfoBean(dataInfoBeanList));
+
+    Image doughNutImage = executableClass.createChartUsingBean("pie", htmlCreationInfoBean);
     doughNutImage.scaleToFit(300, 300);
 
-    Image pieChartImage = executableClass.createChart("pie", "Pie Chart");
+
+    Image pieChartImage = executableClass.createChartUsingBean("doughnut", htmlCreationInfoBean);
     pieChartImage.scaleToFit(300, 300);
 
     Table chartTable = new Table(2);
@@ -136,4 +158,5 @@ public class LicenseVolumeStatisticsReport extends ReportUtils {
 
     executableClass.deleteTempImages("src/main/resources/snapFiles");
   }
+
 }

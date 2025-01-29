@@ -12,6 +12,7 @@ import java.io.IOException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import utility.unit_conversion.UnitConversion;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -258,6 +259,8 @@ public class HtmlFileGenerator {
           .append(data.getValue())
           .append(", name: '")
           .append(data.getName())
+          .append("', itemStyle: { color: '")
+          .append(data.getItemStyle().getColor())
           .append("' },\n");
     }
 
@@ -304,10 +307,15 @@ public class HtmlFileGenerator {
     for (DataInfoBean data : seriesInfoBean.getData()) {
       pieChartData
           .append("                { value: ")
-          .append(data.getValue())
+          .append(UnitConversion.convertToKb(data.getFormat(), data.getValue()))
           .append(", name: '")
           .append(data.getName())
-          .append("' },\n");
+              .append("', itemStyle: { color: '")
+          .append(data.getItemStyle().getColor())
+          .append("' } }");
+      if (data != seriesInfoBean.getData().get(seriesInfoBean.getData().size() - 1)) {
+        pieChartData.append(",\n");
+      }
     }
 
     pieChartData.deleteCharAt(pieChartData.length() - 2); // Remove last comma

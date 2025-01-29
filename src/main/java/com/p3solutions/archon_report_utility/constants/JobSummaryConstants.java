@@ -54,6 +54,8 @@ public class JobSummaryConstants {
 
     public static final String FILES_COUNT_PER_SET ="Files Count Per Set\n";
 
+    public static final String INGESTION_SESSION_ID = "Ingestion Session ID\n";
+
 
 
 

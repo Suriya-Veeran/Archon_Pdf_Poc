@@ -1,4 +1,4 @@
 # config.yml
 location: "/home/p3/IdeaProjects/Pdf_POC/src/main/resources/pdf_report"
-reportName: "License Volume Statistics Report"
+reportName: "Ingestion Report"
 imagePath: "/home/p3/IdeaProjects/Pdf_POC/src/main/resources/Archon-Datastore rasterized.png"

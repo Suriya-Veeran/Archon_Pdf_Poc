@@ -36,7 +36,16 @@ public enum ReportNameConstants {
       """
                    The License Volume Statistics Report provides detailed insights into the utilization of software licenses within an organization. It includes metrics on the total number of licenses available, the number of licenses currently in use, and any remaining or unused licenses. This report helps organizations manage compliance, optimize license allocation, and plan for future licensing needs, ensuring cost-effective use of software resources and adherence to licensing agreements.
                    """,
-      "License_Volume_Statistics.pdf");
+      "License_Volume_Statistics.pdf"),
+
+    SOURCE_TO_VALIDATION_REPORT("Source To Validation Report",
+            """
+                   The Source to Target Validation Report ensures data integrity and accuracy during data migration or ETL (Extract, Transform, Load) processes. It includes checks to confirm that data from the source matches the data loaded into the target system, verifying record counts, data types, and key business rules. This report helps identify discrepancies early, ensuring reliable and consistent data transfer, which is critical for maintaining data quality in the target system.
+                   """,
+            "Source_To_Validation_Report.pdf"
+            )
+
+    ;
 
     private final String reportName;
     private final String description;

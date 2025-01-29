@@ -9,5 +9,5 @@ import lombok.*;
 @NoArgsConstructor
 public class ItemStyle {
     @Builder.Default
-    private String color = "black";
+    private String color = "#000000";
 }

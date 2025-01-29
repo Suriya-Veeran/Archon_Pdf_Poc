@@ -47,6 +47,10 @@ public class Main {
         LicenseVolumeStatisticsReport licenseVolumeStatisticsReport = new LicenseVolumeStatisticsReport(filePath);
         licenseVolumeStatisticsReport.generateReport();
         break;
+      case SOURCE_TO_VALIDATION_REPORT:
+        SourceToValidationReport sourceToValidationReport = new SourceToValidationReport(filePath);
+        sourceToValidationReport.generateReport();
+      break;
       default:
           log.info("No Report  generation implemented for: {}", reportNameConstants);
         break;

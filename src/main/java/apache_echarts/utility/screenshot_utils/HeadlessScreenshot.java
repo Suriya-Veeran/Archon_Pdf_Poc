@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.UUID;
+
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.openqa.selenium.*;
@@ -26,7 +28,7 @@ public class HeadlessScreenshot {
   public static Image takeScreenshot(String url, String browserType, String chartType) {
 
     File screenshotFile;
-    String filePath = SNAP_FILES + File.separator + SNAP + HYPHEN + chartType + PNG_WITH_EXTENSION;
+    String filePath = SNAP_FILES + File.separator + SNAP + HYPHEN + UUID.randomUUID() + PNG_WITH_EXTENSION;
     WebDriver driver = WebDriverConfig.getInstance(browserType);
     try {
       driver.get(url);
