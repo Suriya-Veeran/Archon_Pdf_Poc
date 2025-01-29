@@ -1,5 +1,6 @@
 package apache_echarts.beans.chart;
 
+import apache_echarts.enums.FormatTypes;
 import lombok.*;
 
 @Getter
@@ -12,6 +13,8 @@ public class DataInfoBean {
     private String name = "Default";
     @Builder.Default
     private int value = 0;
+    @Builder.Default
+    private FormatTypes format = FormatTypes.KB;
     @Builder.Default
     private ItemStyle itemStyle = new ItemStyle();
 }

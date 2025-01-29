@@ -16,7 +16,7 @@ public class ChartBasicInfo {
     @Builder.Default
     private String title = "Default Chart Title";     // title of the page
     @Builder.Default
-    private String chartWidth = "800px"; // chart width
+    private String chartWidth = "500px"; // chart width
     @Builder.Default
     private String chartHeight = "600px"; // chart height
     @Builder.Default

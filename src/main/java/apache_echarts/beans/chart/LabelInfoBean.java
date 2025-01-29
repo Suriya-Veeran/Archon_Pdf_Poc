@@ -13,7 +13,7 @@ public class LabelInfoBean {
     @Builder.Default
     private boolean show = true; // Whether the label is displayed
     @Builder.Default
-    private String position = "inside"; // Position of the label (e.g., inside, outside)
+    private String position = "outside"; // Position of the label (e.g., inside, outside)
     @Builder.Default
     private int fontSize = 12; // Font size of the label
     @Builder.Default
@@ -31,11 +31,11 @@ public class LabelInfoBean {
     @Builder.Default
     private String verticalAlign = "middle"; // Vertical text alignment (e.g., top, middle, bottom)
     @Builder.Default
-    private String backgroundColor = "transparent"; // Background color of the label
+    private String backgroundColor = "#fff"; // Background color of the label
     @Builder.Default
-    private List<Integer> padding = List.of(5, 5, 5, 5); // Padding around the label text
+    private List<Integer> padding = List.of(); // Padding around the label text
     @Builder.Default
-    private String shadowColor = "transparent"; // Shadow color for the label
+    private String shadowColor = "rgba(0, 0, 0, 0.5)"; // Shadow color for the label
     @Builder.Default
     private int shadowBlur = 0; // Shadow blur for the label
     @Builder.Default

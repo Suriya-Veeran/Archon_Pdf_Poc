@@ -11,13 +11,13 @@ import lombok.*;
 @AllArgsConstructor
 public class LegendInfoBean {
     @Builder.Default
-    private String orient = ""; // 'vertical' or 'horizontal'
+    private String orient = "vertical"; // 'vertical' or 'horizontal'
 
     @Builder.Default
-    private String left = ""; // Position of the legend (e.g., 'left', 'right', 'center', 'top', 'bottom')
+    private String left = "center"; // Position of the legend (e.g., 'left', 'right', 'center', 'top', 'bottom')
 
     @Builder.Default
-    private String bottom = "auto"; // Position of the legend (optional if using 'top', 'bottom', 'center', etc.)
+    private String bottom = "bottom"; // Position of the legend (optional if using 'top', 'bottom', 'center', etc.)
 
     @Builder.Default
     private TextStyleBean textStyle = new TextStyleBean(); // Text style for the legend

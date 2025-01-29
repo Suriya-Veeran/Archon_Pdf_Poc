@@ -10,13 +10,13 @@ import lombok.*;
 public class TitleInfoBean {
 
     @Builder.Default
-    private String text = "";  // title
+    private String text = "Default";  // title
 
     @Builder.Default
     private String subText = ""; // subTitle
 
     @Builder.Default
-    private String left = "";   // left values -> center, right, top, ''
+    private String left = "center";   // left values -> center, right, top, ''
 
     @Builder.Default
     private String bottom = ""; // bottom values -> bottom, center, right, top, ''

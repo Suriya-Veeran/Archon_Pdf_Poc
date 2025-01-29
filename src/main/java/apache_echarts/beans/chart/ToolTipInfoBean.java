@@ -29,12 +29,12 @@ public class ToolTipInfoBean {
     private int borderWidth = 1; // Border width
 
     @Builder.Default
-    private List<Integer> padding = List.of(5, 5, 5, 5); // Padding for the tooltip
+    private List<Integer> padding = List.of(); // Padding for the tooltip
 
     @Builder.Default
     private TextStyleBean textStyle = new TextStyleBean(); // Text style for the tooltip
 
     @Builder.Default
-    private String extraCssText = ""; // Extra CSS styling
+    private String extraCssText = "font-size: 14px;"; // Extra CSS styling
 
 }
