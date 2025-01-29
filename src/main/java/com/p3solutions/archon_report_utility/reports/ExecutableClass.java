@@ -92,6 +92,8 @@ public interface ExecutableClass {
 
     void addImageToDocument(Image image);
 
+    Image createChart
+            (String chartType, String chartName) throws IOException;
 
-
+    void deleteTempImages(String path);
 }

@@ -1,5 +1,10 @@
 package com.p3solutions.archon_report_utility.utils;
 
+import apache_echarts.beans.html_beans.HtmlCreationInfoBean;
+import apache_echarts.enums.BrowserTypes;
+import apache_echarts.utility.html.HtmlFileGenerator;
+import apache_echarts.utility.screenshot_utils.HeadlessScreenshot;
+import apache_echarts.utility.yaml.YamlMapper;
 import com.itextpdf.io.font.PdfEncodings;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
@@ -44,6 +49,8 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static apache_echarts.constants.PathConstants.DOUGHNUT_YAML;
+import static apache_echarts.constants.PathConstants.PIE_YAML;
 import static com.p3solutions.archon_report_utility.constants.ColorConstants.*;
 import static com.p3solutions.archon_report_utility.constants.CommonConstants.OF;
 import static com.p3solutions.archon_report_utility.constants.CommonConstants.PAGE;
@@ -869,6 +876,39 @@ public class ReportUtils implements ExecutableClass {
   @Override
   public void addImageToDocument(Image image) {
       document.add(image);
+  }
+
+  @Override
+  public Image createChart(String chartType, String chartName) throws IOException {
+
+    HtmlCreationInfoBean htmlCreationInfoBean = switch (chartType) {
+        case "doughnut" -> YamlMapper.parseYaml(DOUGHNUT_YAML);
+        case "pie" -> YamlMapper.parseYaml(PIE_YAML);
+        default -> throw new IllegalArgumentException("Invalid chartType: " + chartType);
+    };
+
+    File htmlFile = HtmlFileGenerator.generateHtml(htmlCreationInfoBean);
+
+    return HeadlessScreenshot.takeScreenshot(
+            htmlFile.toURI().toString(),
+            BrowserTypes.CHROME.getValue(),
+            htmlCreationInfoBean.getChartBasicInfo().getChartType());
+
+
+  }
+
+  @Override
+  public void deleteTempImages(String path) {
+
+    if (path != null) {
+
+      File file = new File(path);
+      if (file.isDirectory()) {
+        for (File listFile : Objects.requireNonNull(file.listFiles())) {
+          listFile.delete();
+        }
+      }
+    }
   }
 
   public void deleteTempFilesUsingPath(Path tempFilePath) throws IOException {

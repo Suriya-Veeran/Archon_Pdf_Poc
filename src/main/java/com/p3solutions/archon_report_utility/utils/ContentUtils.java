@@ -29,7 +29,7 @@ public class ContentUtils {
             case MATERIALIZED_VIEW_REFRESH_REPORT :
                 contentList.add(VIEW_ACTIVITY_SESSION_ID + 12333727);
                  break;
-            case TABLE_OPTIMIZATION_REPORT, INGESTION_REPORT:
+            case TABLE_OPTIMIZATION_REPORT, INGESTION_REPORT, LICENSE_VOLUME_STATISTICS_REPORT:
                 contentList.add(JOB_NAME+"Test Job Name");
                 break;
             default:
@@ -42,21 +42,23 @@ public class ContentUtils {
     }
 
     public static List<String> buildContentForJobSummary(ReportNameConstants type){
+        Date scheduledTime = new Date();
         List<String> contentList = new ArrayList<>();
+        Date startTime = new Date();
         switch (Objects.requireNonNull(type)) {
             case MATERIALIZED_VIEW_REFRESH_REPORT:
                 contentList.add(JOB_TYPE + "Materialized View Refresh Report");
-                addCommonContent(contentList);
+                addCommonContent(contentList, startTime, scheduledTime);
                 contentList.add(JOB_NAME + "Materialized View");
                 break;
             case TABLE_OPTIMIZATION_REPORT:
                 contentList.add(JOB_INSTANCE_ID + "0123546474-5252");
                 contentList.add(JOB_TYPE + "Table Data Optimization");
-                addCommonContent(contentList);
+                addCommonContent(contentList, startTime, scheduledTime);
                 contentList.add(TABLE_NAME + "Address Table");
                 break;
             case INGESTION_REPORT:
-                addCommonContent(contentList);
+                addCommonContent(contentList, startTime, scheduledTime);
                 contentList.add(TABLE_NAME+"Claim");
                 contentList.add(INGESTION_TYPE+"REST");
                 contentList.add(INGESTION_MODE+"Ingest Data");
@@ -68,6 +70,13 @@ public class ContentUtils {
                 contentList.add(SOURCE_PATH+"/home/p3/IdeaProjects/Pdf_POC/src/main/resources");
                 contentList.add(FILES_COUNT_PER_SET+10);
                 break;
+            case LICENSE_VOLUME_STATISTICS_REPORT:
+                contentList.add(SCHEDULED_BY + SYS_ADMIN);
+                contentList.add(SCHEDULED_TIME + scheduledTime);
+                contentList.add(START_TIME + startTime);
+                contentList.add(END_TIME + new Date());
+                contentList.add(TOTAL_TIME + totalTimeCalculation(startTime, new Date()));
+            break;
             default:
                 throw new IllegalArgumentException("Unsupported content type: " + type);
         }
@@ -75,16 +84,22 @@ public class ContentUtils {
     }
 
 
-    private static void addCommonContent(List<String> contentList) {
+    private static void addCommonContent(List<String> contentList,
+                                         Date startTime,
+                                         Date scheduledTime) {
         contentList.add(SCHEDULED_BY + SYS_ADMIN);
-        contentList.add(SCHEDULED_TIME + new Date());
+        contentList.add(SCHEDULED_TIME + scheduledTime);
         contentList.add(START_TIME + new Date());
         contentList.add(END_TIME + new Date());
-        contentList.add(TOTAL_TIME + new Date());
+        contentList.add(TOTAL_TIME + totalTimeCalculation(startTime, new Date()));
         contentList.add(APPLICATION_NAME + "App name");
         contentList.add(SCHEMA_NAME + "Schema Name");
     }
 
+    private static long totalTimeCalculation(Date startTime, Date endTime) {
+        long difference = startTime.getTime() - endTime.getTime();
+        return  (difference / 1000) % 60;
+    }
 
     public static List<String> buildContentForAdditionalInputColumn() {
         List<String> contentList = new ArrayList<>();

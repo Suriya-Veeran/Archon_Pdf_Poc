@@ -28,5 +28,7 @@ public class HeaderConstants {
 
     public static final String SESSION_METRICS = "Session Metrics\n";
 
+    public static final String LICENSE_VOLUME_METRICS = "License Volume Metrics";
+
 
 }

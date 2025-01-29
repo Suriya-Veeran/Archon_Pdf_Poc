@@ -1,0 +1,84 @@
+chartBasicInfo:
+  language: "en"
+  charSet: "UTF-8"
+  title: "Referer of a Website"
+  chartWidth: "500px"
+  chartHeight: "400px"
+  chartType: "pie"
+
+titleInfoBean:
+  text: "Volume"
+  subText: ""
+  left: "center"
+  bottom: ""
+  top: ""
+  textStyle:
+    fontSize: 16
+    fontFamily: "Arial"
+    fontWeight: "bold"
+    color: "#333"
+  subTextStyle:
+    fontSize: 12
+    fontFamily: "Arial"
+    fontWeight: "normal"
+    color: "#666"
+
+toolTipInfoBean:
+  trigger: "item"
+  axisPointer:
+    type: "line"
+  formatter: "{b}: {c}"
+  backgroundColor: "#fff"
+  borderColor: "#ccc"
+  borderWidth: 1
+  padding: [ 10, 15, 10, 15 ]
+  textStyle:
+    fontSize: 12
+    fontFamily: "Arial"
+    fontWeight: "normal"
+    color: "#000"
+  extraCssText: "font-size: 14px;"
+
+legendInfoBean:
+  orient: "vertical"
+  left: "center"
+  bottom: "bottom"
+  textStyle:
+    fontSize: 14
+    fontFamily: "Arial"
+    fontWeight: "normal"
+    color: "#000"
+  data:
+    - "Consumed"
+    - "Remaining"
+
+seriesInfoBean:
+  name: "Access From"
+  type: "pie"
+  data:
+    - name: "Consumed"
+      value: 650
+      itemStyle:
+        color: "#ff0000"
+    - name: "Remaining"
+      value: 350
+      itemStyle:
+        color: "#00ff00"
+  label:
+    show: true
+    position: "outside"
+    formatter: "{b}: {c}"
+    fontSize: 12
+    color: "#000"
+    fontWeight: "bold"
+    fontFamily: "Arial"
+    align: "center"
+    verticalAlign: "middle"
+    backgroundColor: "#fff"
+    padding: [ 5, 10 ]
+    shadowColor: "rgba(0, 0, 0, 0.5)"
+    shadowBlur: 10
+    shadowOffsetX: 0
+    shadowOffsetY: 0
+  radius: ["50%"]
+

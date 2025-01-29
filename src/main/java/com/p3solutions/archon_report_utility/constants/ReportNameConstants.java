@@ -30,9 +30,13 @@ public enum ReportNameConstants {
                     The ingestion report details the process of importing data from various sources into the system. It includes metrics on data volume, ingestion times, and success rates, as well as any errors or issues encountered. This report ensures that the data ingestion process is efficient, accurate, and aligned with organizational requirements, providing a foundation for reliable data analytics and operations.
                     """,
             "Ingestion_Report.pdf"),
-        ;
 
-
+  LICENSE_VOLUME_STATISTICS_REPORT(
+      "License Volume Statistics Report",
+      """
+                   The License Volume Statistics Report provides detailed insights into the utilization of software licenses within an organization. It includes metrics on the total number of licenses available, the number of licenses currently in use, and any remaining or unused licenses. This report helps organizations manage compliance, optimize license allocation, and plan for future licensing needs, ensuring cost-effective use of software resources and adherence to licensing agreements.
+                   """,
+      "License_Volume_Statistics.pdf");
 
     private final String reportName;
     private final String description;
