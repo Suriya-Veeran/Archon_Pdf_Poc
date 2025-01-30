@@ -84,8 +84,9 @@ public class HtmlFileGenerator {
     htmlContent.append(
         generateJavaScript(
             chartType, titleInfoBean, toolTipInfoBean, legendInfoBean, seriesInfoBean, xAxisInfoBean, yAxisInfoBean));
-
-    htmlContent.append("</script></body></html>");
+    htmlContent.append("</script>\n");
+    htmlContent.append("</body>\n");
+    htmlContent.append("</html>");
 
     File outputFile = new File(HTML_FILES + File.separator + GENERATED_CHART+"_"+chartType+".html");
     try (FileWriter writer =
@@ -108,7 +109,15 @@ public class HtmlFileGenerator {
       AxisInfoBean yaxisInfoBean) {
     StringBuilder jsContent = new StringBuilder();
     jsContent
-        .append("    var chart = echarts.init(document.getElementById('chart'));\n")
+        .append("    var chart = echarts.init(document.getElementById('chart'));\n\n")
+        .append("    function formatValue(value) {\n")
+        .append("        if (value >= 1024 * 1024) {\n")
+        .append("            return (value / (1024 * 1024)).toFixed(2) + ' GB';\n")
+        .append("        } else if (value >= 1024) {\n")
+        .append("            return (value / 1024).toFixed(2) + ' MB';\n")
+        .append("        }\n")
+        .append("        return value + ' KB';\n")
+        .append("    }\n\n")
         .append("    var option = {\n")
         .append("        title: {\n")
         .append("            text: '")
@@ -185,7 +194,6 @@ public class HtmlFileGenerator {
     }
 
     jsContent.append("    };\n").append("    chart.setOption(option);\n");
-
     return jsContent.toString();
   }
 
@@ -310,7 +318,7 @@ public class HtmlFileGenerator {
           .append(UnitConversion.convertToKb(data.getFormat(), data.getValue()))
           .append(", name: '")
           .append(data.getName())
-              .append("', itemStyle: { color: '")
+          .append("', itemStyle: { color: '")
           .append(data.getItemStyle().getColor())
           .append("' } }");
       if (data != seriesInfoBean.getData().get(seriesInfoBean.getData().size() - 1)) {
@@ -328,9 +336,9 @@ public class HtmlFileGenerator {
         .append("                position: '")
         .append(seriesInfoBean.getLabel().getPosition())
         .append("',\n")
-        .append("                formatter: '")
-        .append(seriesInfoBean.getLabel().getFormatter())
-        .append("',\n")
+        .append("                formatter: function (params) {\n")
+        .append("                    return formatValue(params.value) + ' (' + params.percent + '%)';\n")
+        .append("                },\n")
         .append(FONT_SIZE)
         .append(seriesInfoBean.getLabel().getFontSize())
         .append("\n")

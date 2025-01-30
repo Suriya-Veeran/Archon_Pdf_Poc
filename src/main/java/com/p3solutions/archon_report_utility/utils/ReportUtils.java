@@ -879,7 +879,7 @@ public class ReportUtils implements ExecutableClass {
   }
 
   @Override
-  public Image createChart(String chartType, String chartName) throws IOException {
+  public Image createChart(String chartType) throws IOException {
 
     HtmlCreationInfoBean htmlCreationInfoBean = switch (chartType) {
         case "doughnut" -> YamlMapper.parseYaml(DOUGHNUT_YAML);
@@ -909,6 +909,17 @@ public class ReportUtils implements ExecutableClass {
         }
       }
     }
+  }
+
+  @Override
+  public Image createChartUsingBean(String chartType,
+                                    HtmlCreationInfoBean htmlCreationInfoBean) {
+    File htmlFile = HtmlFileGenerator.generateHtml(htmlCreationInfoBean);
+
+    return HeadlessScreenshot.takeScreenshot(
+        htmlFile.toURI().toString(),
+        BrowserTypes.CHROME.getValue(),
+        htmlCreationInfoBean.getChartBasicInfo().getChartType());
   }
 
   public void deleteTempFilesUsingPath(Path tempFilePath) throws IOException {

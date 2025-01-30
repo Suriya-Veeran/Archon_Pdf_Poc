@@ -115,25 +115,45 @@ public class LicenseVolumeStatisticsReport extends ReportUtils {
     executableClass.addEmptyLines(1);
 
     List<String> pieData = new ArrayList<>();
-    pieData.add("2 GB");
-    pieData.add("350 MB");
+    pieData.add("350 GB");
+    pieData.add("650 GB");
 
     List<DataInfoBean> dataInfoBeanList = new ArrayList<>();
-    dataInfoBeanList.add(buildDataInfoBean("2 GB", 2, FormatTypes.GB, "ff0000"));
-    dataInfoBeanList.add(buildDataInfoBean("350 MB", 650, FormatTypes.MB, "00ff00"));
+    dataInfoBeanList.add(buildDataInfoBean("350 GB", 350, FormatTypes.GB, "#397EE3"));
+    dataInfoBeanList.add(buildDataInfoBean("650 GB", 650, FormatTypes.GB, "#9AC2FC"));
 
     HtmlCreationInfoBean htmlCreationInfoBean =
         createChartConfig(
-            createChartBasicInfo("500px", "400px", "pie"),
+            createChartBasicInfo("500px", "400px", "doughnut"),
             createTitleConfig("Volume", 16, "Arial", "bold", "#333"),
             createLegendInfoBean(pieData),
             createSeriesInfoBean(dataInfoBeanList));
 
-    Image doughNutImage = executableClass.createChartUsingBean("pie", htmlCreationInfoBean);
+    Image doughNutImage = executableClass.createChartUsingBean("doughnut", htmlCreationInfoBean);
     doughNutImage.scaleToFit(300, 300);
 
+    List<String> filesData = new ArrayList<>();
+    filesData.add("Structured");
+    filesData.add("Unstructured");
+    filesData.add("Compliance");
+    filesData.add("Disposed");
 
-    Image pieChartImage = executableClass.createChartUsingBean("doughnut", htmlCreationInfoBean);
+
+    List<DataInfoBean> filesDataInfoBeanList = new ArrayList<>();
+    filesDataInfoBeanList.add(buildDataInfoBean("Structured", 347, FormatTypes.GB, "#397EE3"));
+    filesDataInfoBeanList.add(buildDataInfoBean("Unstructured", 100, FormatTypes.GB, "#406292"));
+    filesDataInfoBeanList.add(buildDataInfoBean("Compliance", 32, FormatTypes.GB, "#697A91"));
+    filesDataInfoBeanList.add(buildDataInfoBean("Disposed", 512, FormatTypes.MB, "#9AC2FC"));
+
+    HtmlCreationInfoBean filesHtmlCreationInfoBean =
+            createChartConfig(
+                    createChartBasicInfo("500px", "400px", "doughnut"),
+                    createTitleConfig("Consumption", 16, "Arial", "bold", "#333"),
+                    createLegendInfoBean(filesData),
+                    createSeriesInfoBean(filesDataInfoBeanList));
+
+
+    Image pieChartImage = executableClass.createChartUsingBean("doughnut", filesHtmlCreationInfoBean);
     pieChartImage.scaleToFit(300, 300);
 
     Table chartTable = new Table(2);
